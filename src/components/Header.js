@@ -12,6 +12,11 @@ const Header = () => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
+                        <NavLink to="/companies" exact activeClassName="active">
+                            Companies
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
                         <NavLink to="/protected" activeClassName="active">
                             Protected Page
                         </NavLink>

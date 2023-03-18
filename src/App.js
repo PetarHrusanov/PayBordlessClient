@@ -6,6 +6,8 @@ import Login from './components/Login';
 import Protected from './components/Protected';
 import Header from "./components/Header";
 import HomePage from "./components/HomePage";
+import Companies from "./components/Companies";
+import CompanyCreate from "./components/CompanyCreate";
 
 const App = () => {
     return (
@@ -14,7 +16,9 @@ const App = () => {
 
             <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/companies" element={<Companies />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/company-create" element={<CompanyCreate />} />
                 <Route path="/protected" element={<PrivateRoute />} >
                     <Route index element={<Protected />} />
                 </Route>
