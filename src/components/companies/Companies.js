@@ -1,5 +1,5 @@
 import React from 'react';
-import companiesDummy from '../dummy-data/companies-dummy.json';
+import companiesDummy from '../../dummy-data/companies-dummy.json';
 import {Company} from './Company'
 import {Link} from "react-router-dom";
 

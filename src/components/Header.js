@@ -17,6 +17,11 @@ const Header = () => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
+                        <NavLink to="/invoices" exact activeClassName="active">
+                            Invoices
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
                         <NavLink to="/protected" activeClassName="active">
                             Protected Page
                         </NavLink>
