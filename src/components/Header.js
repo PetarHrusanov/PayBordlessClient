@@ -1,7 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Header = () => {
+    const [token, setToken] = useState(getToken());
+
+    function getToken() {
+        const tokenCookie = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="));
+
+        if (tokenCookie) {
+            return tokenCookie.split("=")[1];
+        }
+        return null;
+    }
+
     return (
         <header className="header">
             <nav className="nav">
@@ -21,11 +34,19 @@ const Header = () => {
                             Invoices
                         </NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink to="/protected" activeClassName="active">
-                            Protected Page
-                        </NavLink>
-                    </li>
+                    {token ? null : (
+                        <li className="nav-item">
+                            <NavLink to="/register" exact activeClassName="active">
+                                Register
+                            </NavLink>
+                        </li>
+                    )}
+
+                        {/*<li className="nav-item">*/}
+                        {/*    <NavLink to="/register" exact activeClassName="active">*/}
+                        {/*        Register*/}
+                        {/*    </NavLink>*/}
+                        {/*</li>*/}
                 </ul>
             </nav>
         </header>
