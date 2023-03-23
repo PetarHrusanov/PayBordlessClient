@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import authService from "../../services/authService";
 
-const Register = () => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setFirstName] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
     const handleSubmit = async (e) => {
@@ -16,7 +15,7 @@ const Register = () => {
         }
 
         try {
-            await authService.register(name, email, password);
+            await authService.login(email, password);
             window.location.href = '/';
         } catch (err) {
             console.error(err);
@@ -35,11 +34,9 @@ const Register = () => {
             <label className="form-label">Password</label>
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" />
             {passwordError && <p className="error">{passwordError}</p>}
-            <label className="form-label">First name</label>
-            <input type="text" placeholder="First name" value={name} onChange={(e) => setFirstName(e.target.value)} className="form-input" />
-            <button type="submit" className="create-button button">Register</button>
+            <button type="submit" className="create-button button">Login</button>
         </form>
     );
 };
 
-export default Register;
+export default Login;

@@ -1,16 +1,15 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
-import Login from './components/Login';
-import Protected from './components/Protected';
-import Header from "./components/Header";
+import Header from "./components/shared/Header";
 import HomePage from "./components/HomePage";
 import Companies from "./components/companies/Companies";
 import CompanyCreate from "./components/companies/CompanyCreate";
 import Invoices from "./components/invoices/Invoices";
 import InvoiceCreate from "./components/invoices/InvoiceCreate";
 import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
+import TestForm from "./components/TestForm";
 
 const App = () => {
     return (
@@ -22,12 +21,10 @@ const App = () => {
                 <Route path="/companies" element={<Companies />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/invoice-create" element={<InvoiceCreate />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/test" element={<TestForm />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/company-create" element={<CompanyCreate />} />
-                <Route path="/protected" element={<PrivateRoute />} >
-                    <Route index element={<Protected />} />
-                </Route>
             </Routes>
         </Router>
     );

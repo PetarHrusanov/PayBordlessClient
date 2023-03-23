@@ -1,5 +1,5 @@
-// CompanyCreate.js
-import React, { useState } from 'react';
+import {useState} from "react";
+import {requestInterceptor} from "../../services/requestInterceptor";
 
 const CompanyCreate = () => {
     const [name, setName] = useState('');
@@ -18,7 +18,8 @@ const CompanyCreate = () => {
         setOwner(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        console.log('handleSubmit called');
         event.preventDefault();
 
         // Validate form data
@@ -37,7 +38,15 @@ const CompanyCreate = () => {
             return;
         }
 
-        // Add code to submit the form data here
+        try {
+            const request = requestInterceptor();
+            const data = { name, vat, owner };
+            await request.post('http://localhost:5025/company/upload', data);
+            alert('Company created successfully!');
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred while creating the company');
+        }
     };
 
     return (
