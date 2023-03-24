@@ -9,7 +9,7 @@ import Invoices from "./components/invoices/Invoices";
 import InvoiceCreate from "./components/invoices/InvoiceCreate";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import TestForm from "./components/TestForm";
+import {Profile} from "./components/Profile";
 
 const App = () => {
     return (
@@ -21,7 +21,7 @@ const App = () => {
                 <Route path="/companies" element={<Companies />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/invoice-create" element={<InvoiceCreate />} />
-                <Route path="/test" element={<TestForm />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/company-create" element={<CompanyCreate />} />

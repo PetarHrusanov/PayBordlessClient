@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {requestInterceptor} from "../../services/requestInterceptor";
+import companyService from "../../services/companyService";
 
 const CompanyCreate = () => {
     const [name, setName] = useState('');
@@ -39,14 +39,13 @@ const CompanyCreate = () => {
         }
 
         try {
-            const request = requestInterceptor();
-            const data = { name, vat, owner };
-            await request.post('http://localhost:5025/company/upload', data);
+            await companyService.create(name, vat, owner);
             alert('Company created successfully!');
-        } catch (error) {
-            console.error(error);
-            alert('An error occurred while creating the company');
+            /*window.location.href = '/';*/
+        } catch (err) {
+            console.error(err);
         }
+
     };
 
     return (

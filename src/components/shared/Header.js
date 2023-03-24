@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { NavLink, useMatch, useLocation } from 'react-router-dom';
-import AuthService from "../../services/authService";
+import {authService} from "../../services/authService";
 
 const Header = () => {
     const [token, setToken] = useState(getToken());
@@ -12,7 +12,7 @@ const Header = () => {
     }
 
     const handleLogout = () => {
-        AuthService.logout();
+        authService.logout();
         setToken(null);
     };
 
@@ -40,11 +40,6 @@ const Header = () => {
                             Invoices
                         </NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink to="/test" activeClassName="active">
-                            Test
-                        </NavLink>
-                    </li>
                     {!token && (
                         <React.Fragment>
                             <li className="nav-item">
@@ -60,9 +55,16 @@ const Header = () => {
                         </React.Fragment>
                     )}
                     {token && (
-                        <li className="nav-item">
-                            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-                        </li>
+                        <React.Fragment>
+                            <li className="nav-item">
+                                <NavLink to="/profile" activeClassName="active">
+                                    Profile
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                            </li>
+                        </React.Fragment>
                     )}
 
                 </ul>

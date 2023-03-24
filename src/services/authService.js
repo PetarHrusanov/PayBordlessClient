@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const authService = {
+export const authService = {
     baseUrl: 'http://localhost:5025/identity',
 
     async register(name, email, password) {
@@ -14,11 +14,12 @@ const authService = {
             }
         });
 
-        // Get the JWT token from the response
-        const token = response.data.token;
+        // Get the JWT token and user data from the response
+        const { token, user } = response.data;
 
-        // Store the token in localStorage
+        // Store the token and user data in localStorage
         localStorage.setItem('token', token);
+        localStorage.setItem('user', user);
     },
 
     async login(email, password) {
@@ -27,16 +28,18 @@ const authService = {
             password
         });
 
-        // Get the JWT token from the response
-        const token = response.data.token;
+        // Get the JWT token and user data from the response
+        const { token, user } = response.data;
 
-        // Store the token in localStorage
+        // Store the token and user data in localStorage
         localStorage.setItem('token', token);
+        localStorage.setItem('user', user);
     },
 
     logout() {
-        // Remove the token from localStorage
+        // Remove the token and user data from localStorage
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
 
         // Redirect to the login page
         window.location.href = '/login';
@@ -45,7 +48,10 @@ const authService = {
     getToken() {
         // Get the token from localStorage
         return localStorage.getItem('token');
+    },
+
+    getUser() {
+        // Get the user data from localStorage
+        return localStorage.getItem('user');
     }
 };
-
-export default authService;
