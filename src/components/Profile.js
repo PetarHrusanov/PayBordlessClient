@@ -1,42 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import companyService from "../services/companyService";
-import { authService } from "../services/authService";
+import {CompanyEdit} from "./companies/CompanyEdit";
 
 export const Profile = () => {
     const [user, setUser] = useState(null);
     const [companiesArray, setCompaniesArray] = useState([]);
+    const [showEditWindow, setShowEditWindow] = useState(false);
+    const [selectedCompany, setSelectedCompany] = useState(null);
 
-    /*useEffect(() => {
+    const fetchCompanies = () => {
         companyService.getByUserId()
-            .then(result =>
-                setCompaniesArray(result)
-            )
-    }, []);*/
+            .then(result => {
+                setCompaniesArray(result);
+            })
+            .catch(error => {
+                console.error('Error fetching companies:', error);
+            });
+    };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Content-Type': 'application/json',
-        };
-
-        if (token) {
-            headers.Authorization = `Bearer ${token}`;
-        }
-
-        fetch(`http://localhost:5025/company/GetByUser`, {
-            method: 'GET',
-            headers: headers,
-        })
-            .then(response => response.json())
-            .then((usefulData) => {
-                console.log(usefulData);
-                setCompaniesArray(usefulData);
-            })
-            .catch((e) => {
-                console.error(`An error occurred: ${e}`);
-            });
+        fetchCompanies();
     }, []);
 
+    const handleEditClick = (company) => {
+        setSelectedCompany(company);
+        setShowEditWindow(true);
+    };
+
+    const handleEditSubmit = (updatedCompany) => {
+        companyService.edit(updatedCompany.id, updatedCompany.name, updatedCompany.vat, updatedCompany.owner, updatedCompany.userId)
+            .then(() => {
+                setShowEditWindow(false);
+                setSelectedCompany(null);
+                fetchCompanies();
+            })
+            .catch(error => {
+                console.error('Error updating company:', error);
+            });
+    };
+
+    const handleClose = () => {
+        setShowEditWindow(false);
+        fetchCompanies();
+    };
 
     if (!companiesArray || companiesArray.length === 0) {
         return <div>Loading...</div>;
@@ -46,28 +52,38 @@ export const Profile = () => {
         <div>
             <h1>Profile</h1>
             <h2>Companies:</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>VAT</th>
-                    <th>Owner</th>
-                    <th>User ID</th>
-                </tr>
-                </thead>
-                <tbody>
-                {companiesArray.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>{item.name}</td>
-                        <td>{item.vat}</td>
-                        <td>{item.owner}</td>
-                        <td>{item.userId}</td>
+            <div className="table-wrapper">
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>VAT</th>
+                        <th>Owner</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {companiesArray.map((item) => {
+                        const { id, name, vat, owner, userId } = item;
+                        return (
+                            <tr key={id}>
+                                <td>{id}</td>
+                                <td>{name}</td>
+                                <td>{vat}</td>
+                                <td>{owner}</td>
+                                <td>
+                                    <button className="edit-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
+            </div>
+            {showEditWindow && <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onClose={() => setShowEditWindow(false)} />}
         </div>
-    );
-}
+    )
+};
+
+

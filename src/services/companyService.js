@@ -11,29 +11,44 @@ const companyService = {
 
     getAll: async () => {
         const request = requestInterceptor();
-        const response = await request.get(`${companyService.baseUrl}/all`);
-        return response.json();
+        const response = await request.get(`${companyService.baseUrl}/GetAll`);
+        return response;
     },
 
     getByUserId: async () => {
-        const request = requestInterceptor();
-        const response = await request.get(`${companyService.baseUrl}/getByUser`);
-        const code = response.code();
-        console.log(response)
-        const companies = await response.json(); // Make sure to await the JSON conversion
-        return companies;
+        try {
+            const request = requestInterceptor();
+            const companies = await request.get(`${companyService.baseUrl}/getByUser`);
+            return companies;
+        } catch (error) {
+            console.error('Error fetching companies:', error);
+            throw error;
+        }
     },
 
-    edit: async (id, name, vat, owner) => {
+    edit: async (id, name, vat, owner, userId) => {
         const request = requestInterceptor();
-        const data = { name, vat, owner };
-        await request.put(`${companyService.baseUrl}/${id}`, data);
+        const data = { id, name, vat, owner, userId };
+        await request.put(`${companyService.baseUrl}/edit`, data);
     },
 
     delete: async (id) => {
         const request = requestInterceptor();
         await request.delete(`${companyService.baseUrl}/${id}`);
+    },
+
+    getServicesByCompanyId: async (companyId) => {
+        try {
+            const request = requestInterceptor();
+            const response = await request.get(`${companyService.baseUrl}/${companyId}/services`);
+            const data = response.data;
+            return data;
+        } catch (error) {
+            console.error('Error fetching services by company ID:', error);
+            throw error;
+        }
     }
+
 };
 
 export default companyService;

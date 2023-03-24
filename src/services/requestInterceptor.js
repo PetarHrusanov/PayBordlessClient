@@ -24,13 +24,7 @@ export const requestInterceptor = () => {
             return {};
         }
 
-        const result = response.data;
-
-        if (!response.ok) {
-            throw result;
-        }
-
-        return result;
+        return response.data;
     };
 
     return {

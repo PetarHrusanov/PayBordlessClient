@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
-import { NavLink, useMatch, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {authService} from "../../services/authService";
 
 const Header = () => {
     const [token, setToken] = useState(getToken());
-    const location = useLocation();
-
     function getToken() {
         const token = localStorage.getItem('token');
         return token ? token : null;
@@ -15,11 +13,6 @@ const Header = () => {
         authService.logout();
         setToken(null);
     };
-
-/*    const isActive = (path) => {
-        const match = useMatch(path);
-        return match ? 'active' : '';
-    };*/
 
     return (
         <header className="header">
@@ -40,6 +33,11 @@ const Header = () => {
                             Invoices
                         </NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink to="/services" activeClassName="active">
+                             Services
+                        </NavLink>
+                     </li>
                     {!token && (
                         <React.Fragment>
                             <li className="nav-item">

@@ -1,14 +1,16 @@
 // App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from "./components/shared/Header";
 import HomePage from "./components/HomePage";
-import Companies from "./components/companies/Companies";
-import CompanyCreate from "./components/companies/CompanyCreate";
-import Invoices from "./components/invoices/Invoices";
-import InvoiceCreate from "./components/invoices/InvoiceCreate";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import Companies from "./components/companies/Companies";
+import CompanyCreate from "./components/companies/CompanyCreate";
+import Services from "./components/services/Services";
+// import ServiceCreate from "./components/services/ServiceCreate";
+import Invoices from "./components/invoices/Invoices";
+import {InvoiceCreate} from "./components/invoices/InvoiceCreate";
 import {Profile} from "./components/Profile";
 
 const App = () => {
@@ -25,6 +27,8 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/company-create" element={<CompanyCreate />} />
+                <Route path="/services" element={<Services />} />
+{/*                 <Route path="/service-create" element={<ServiceCreate />} /> */}
             </Routes>
         </Router>
     );

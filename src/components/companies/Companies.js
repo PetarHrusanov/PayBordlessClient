@@ -1,12 +1,37 @@
-import React from 'react';
-import companiesDummy from '../../dummy-data/companies-dummy.json';
-import {Company} from './Company'
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Company } from './Company';
+import {InvoiceCreate} from '../invoices/InvoiceCreate';
+import companyService from "../../services/companyService";
 
 const Companies = () => {
+    const [companiesArray, setCompaniesArray] = useState([]);
+    const [showCreateInvoice, setShowCreateInvoice] = useState(false);
+    const [selectedCompanyId, setSelectedCompanyId] = useState(null);
 
-    const onInfoClick = (company) => {
-        console.log('Company info clicked:', company);
+    const fetchCompanies = () => {
+        companyService
+            .getAll()
+            .then((result) => {
+                setCompaniesArray(result);
+            })
+            .catch((error) => {
+                console.error('Error fetching companies:', error);
+            });
+    };
+
+    useEffect(() => {
+        fetchCompanies();
+    }, []);
+
+    const handleActionClick = (companyId) => {
+        setSelectedCompanyId(companyId);
+        setShowCreateInvoice(true);
+    };
+
+    const handleClose = () => {
+        setShowCreateInvoice(false);
+        fetchCompanies();
     };
 
     return (
@@ -26,16 +51,15 @@ const Companies = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {companiesDummy.companies.map((company) => (
-                        <Company
-                            key={company.id}
-                            {...company}
-                            onInfoClick={onInfoClick}
-                        />
+                    {companiesArray.map((company) => (
+                        <Company key={company.id} {...company} onActionClick={handleActionClick} />
                     ))}
                     </tbody>
                 </table>
             </div>
+            {showCreateInvoice && (
+                <InvoiceCreate companyId={selectedCompanyId} onClose={handleClose} />
+            )}
         </>
     );
 };
