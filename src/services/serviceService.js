@@ -32,22 +32,10 @@ const serviceService = {
         await request.put(`${serviceService.baseUrl}/edit`, data);
     },
 
-    delete: async (id) => {
-        const request = requestInterceptor();
-        await request.delete(`${serviceService.baseUrl}/${id}`);
-    },
-
-    // getServicesByCompanyId: async (companyId) => {
-    //     try {
-    //         const request = requestInterceptor();
-    //         const response = await request.get(`${serviceService.baseUrl}/${companyId}/services`);
-    //         const data = response.data;
-    //         return data;
-    //     } catch (error) {
-    //         console.error('Error fetching services by company ID:', error);
-    //         throw error;
-    //     }
-    // }
+   delete: async (id) => {
+       const request = requestInterceptor();
+       await request.delete(`${serviceService.baseUrl}/delete/${id}`);
+   },
 
 };
 

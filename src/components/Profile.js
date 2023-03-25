@@ -63,15 +63,19 @@ export const Profile = () => {
     };
 
     const handleServiceEditSubmit = (updatedService) => {
-      serviceService.edit(updatedService.id, updatedService.name, updatedService.price, updatedService.companyId)
-        .then(() => {
-          setShowServiceEditWindow(false);
-          setSelectedService(null);
-          fetchServices();
-        })
-        .catch(error => {
-          console.error('Error updating service:', error);
-        });
+        if (updatedService.isDeleted) {
+            // Remove the deleted service from the servicesArray
+            setServicesArray(servicesArray.filter(service => service.id !== updatedService.id));
+        } else {
+            // Update the service in the servicesArray
+            setServicesArray(
+                servicesArray.map(service =>
+                    service.id === updatedService.id ? updatedService : service
+                )
+            );
+        }
+        // Close the edit window
+        setShowServiceEditWindow(false);
     };
 
 //     const handleClose = () => {
