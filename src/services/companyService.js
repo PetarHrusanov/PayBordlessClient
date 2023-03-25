@@ -40,9 +40,8 @@ const companyService = {
     getServicesByCompanyId: async (companyId) => {
         try {
             const request = requestInterceptor();
-            const response = await request.get(`${companyService.baseUrl}/${companyId}/services`);
-            const data = response.data;
-            return data;
+            const response = await request.get(`${companyService.baseUrl}/GetServicesById/${companyId}`);
+            return response;
         } catch (error) {
             console.error('Error fetching services by company ID:', error);
             throw error;

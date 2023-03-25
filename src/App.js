@@ -8,7 +8,7 @@ import Login from "./components/auth/Login";
 import Companies from "./components/companies/Companies";
 import CompanyCreate from "./components/companies/CompanyCreate";
 import Services from "./components/services/Services";
-// import ServiceCreate from "./components/services/ServiceCreate";
+import { ServiceCreate } from "./components/services/ServiceCreate";
 import Invoices from "./components/invoices/Invoices";
 import {InvoiceCreate} from "./components/invoices/InvoiceCreate";
 import {Profile} from "./components/Profile";
@@ -28,7 +28,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/company-create" element={<CompanyCreate />} />
                 <Route path="/services" element={<Services />} />
-{/*                 <Route path="/service-create" element={<ServiceCreate />} /> */}
+                <Route path="/service-create" element={<ServiceCreate />} /> */}
             </Routes>
         </Router>
     );

@@ -3,9 +3,9 @@ import { requestInterceptor } from './requestInterceptor';
 const serviceService = {
     baseUrl: 'http://localhost:5025/service',
 
-    create: async (name, vat, owner) => {
+    create: async (name, price, companyId) => {
         const request = requestInterceptor();
-        const data = { name, vat, owner };
+        const data = { name, price, companyId };
         await request.post(`${serviceService.baseUrl}/upload`, data);
     },
 
@@ -26,9 +26,9 @@ const serviceService = {
         }
     },
 
-    edit: async (id, name, vat, owner, userId) => {
+    edit: async (id, name, price, companyId) => {
         const request = requestInterceptor();
-        const data = { id, name, vat, owner, userId };
+        const data = { id, name, price, companyId };
         await request.put(`${serviceService.baseUrl}/edit`, data);
     },
 
