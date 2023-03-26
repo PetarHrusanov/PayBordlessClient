@@ -3,7 +3,8 @@ import companyService from "../services/companyService";
 import {CompanyEdit} from "./companies/CompanyEdit";
 import serviceService from "../services/serviceService";
 import { ServiceEdit } from "./services/ServiceEdit";
-
+import { ServiceCreate } from "../components/services/ServiceCreate";
+import CompanyCreate from "../components/companies/CompanyCreate";
 
 export const Profile = () => {
     const [companiesArray, setCompaniesArray] = useState([]);
@@ -12,6 +13,8 @@ export const Profile = () => {
     const [servicesArray, setServicesArray] = useState([]); // Add this line
     const [showServiceEditWindow, setShowServiceEditWindow] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
+    const [showCompanyCreateWindow, setShowCompanyCreateWindow] = useState(false);
+    const [showServiceCreateWindow, setShowServiceCreateWindow] = useState(false);
 
     const fetchCompanies = () => {
         companyService.getByUserId()
@@ -78,6 +81,14 @@ export const Profile = () => {
         setShowServiceEditWindow(false);
     };
 
+    const handleCompanyCreateClick = () => {
+        setShowCompanyCreateWindow(!showCompanyCreateWindow);
+        };
+
+    const handleServiceCreateClick = () => {
+        setShowServiceCreateWindow(!showServiceCreateWindow);
+        };
+
 //     const handleClose = () => {
 //         setShowEditWindow(false);
 //         fetchCompanies();
@@ -90,6 +101,7 @@ export const Profile = () => {
     return (
         <div className="container">
         <h2 className="heading">Your Companies</h2>
+        <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
             <div className="table-wrapper">
                 <table className="table">
                     <thead>
@@ -120,7 +132,10 @@ export const Profile = () => {
                 </table>
             </div>
             {showEditWindow && <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onClose={() => setShowEditWindow(false)} />}
+            {showCompanyCreateWindow && <CompanyCreate />}
+
             <h2 className="heading">Your Services</h2>
+            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
                         <div className="table-wrapper">
                             <table className="table">
                                 <thead>
@@ -151,6 +166,7 @@ export const Profile = () => {
                             </table>
                         </div>
                         {showServiceEditWindow && <ServiceEdit service={selectedService} companies={companiesArray} onSubmit={handleServiceEditSubmit} onClose={() => setShowServiceEditWindow(false)} />}
+                        {showServiceCreateWindow && <ServiceCreate />}
 
 
         </div>

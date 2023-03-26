@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Service } from './Service';
 import { ServiceCreate } from '../services/ServiceCreate';
 import serviceService from "../../services/serviceService";
@@ -36,11 +35,6 @@ const Services = () => {
 
     return (
         <>
-            <div className="create-button">
-                <Link to="/service-create">
-                    <button>Create Service</button>
-                </Link>
-            </div>
             <div className="table-wrapper">
                 <table className="table">
                     <thead>
