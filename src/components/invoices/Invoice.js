@@ -1,19 +1,17 @@
 import React from 'react';
+import jsPDF from 'jspdf';
 
-export const Invoice = ({ id, number, Issuer, Services, Total, onInfoClick }) => {
-    return (
-        <tr>
-            <td>{number}</td>
-            <td>{Issuer}</td>
-            <td>
-                {Services.Name} - {Services.Price} - {Services.Quantity}
-            </td>
-            <td>{Total}</td>
-            <td>
-                <button onClick={() => onInfoClick({ id, number, Issuer, Services, Total })}>
-                    Info
-                </button>
-            </td>
-        </tr>
-    );
+export const Invoice = ({ invoice, onDownloadClick }) => {
+  const { id, serviceName, quantity, total } = invoice;
+
+  return (
+    <tr>
+      <td>{serviceName}</td>
+      <td>{quantity}</td>
+      <td>{total}</td>
+      <td>
+        <button className="create-btn" onClick={() => onDownloadClick(invoice)}>Download</button>
+      </td>
+    </tr>
+  );
 };

@@ -3,7 +3,7 @@ import companyService from "../../services/companyService";
 import invoiceService from "../../services/invoiceService";
 
 
-const InvoiceCreate = ({ companyId, onClose }) => {
+const InvoiceCreate = ({ companyId, serviceId, onClose }) => {
     const [companyServices, setCompanyServices] = useState([]);
     const [selectedService, setSelectedService] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -13,14 +13,23 @@ const InvoiceCreate = ({ companyId, onClose }) => {
 
 
     useEffect(() => {
-        companyService
-            .getServicesByCompanyId(companyId)
-            .then((services) => {
-                setCompanyServices(services);
-            })
-            .catch((error) => {
-                console.error('Error fetching services:', error);
-            });
+            companyService
+                .getServicesByCompanyId(companyId)
+                .then((services) => {
+                    setCompanyServices(services);
+
+                    // Preselect service if serviceId is passed
+                    if (serviceId) {
+                        const selected = services.find(service => service.id === serviceId);
+                        if (selected) {
+                            setSelectedService(selected.id);
+                            setPrice(selected.price);
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching services:', error);
+                });
 
         companyService
             .getByUserId()
@@ -30,7 +39,7 @@ const InvoiceCreate = ({ companyId, onClose }) => {
             .catch((error) => {
                 console.error('Error fetching companies:', error);
             });
-    }, [companyId]);
+    }, [companyId, serviceId]);
 
     const handleServiceChange = (event) => {
         const selected = companyServices.find(service => service.id === parseInt(event.target.value));

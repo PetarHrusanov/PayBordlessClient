@@ -10,7 +10,7 @@ const Service = ({ id, name, price, onActionClick }) => {
             <td>{name}</td>
             <td>{price}</td>
             <td>
-                <button onClick={handleActionClick}>Create Invoice</button>
+                <button className="create-btn" onClick={handleActionClick}>Create Invoice</button>
             </td>
         </tr>
     );

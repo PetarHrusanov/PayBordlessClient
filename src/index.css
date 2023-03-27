@@ -84,7 +84,7 @@
     background-color: #e59400;
 }
 
-.actions .btn.edit-btn {
+.actions .btn.create-btn {
     margin-right: 1rem;
 }
 
@@ -371,7 +371,7 @@ button[type="submit"]:hover {
     color: #d18c00;
 }
 
-.edit-btn,
+.create-btn,
 .btn {
     background-color: #f5a623;
     color: #fff;
@@ -383,12 +383,12 @@ button[type="submit"]:hover {
     border-radius: 5px;
 }
 
-.edit-btn:hover,
+.create-btn:hover,
 .btn:hover {
     background-color: #d18c00;
 }
 
-.delete-btn {
+.create-btn {
     background-color: #f44336;
     color: white;
     border: none;
@@ -438,6 +438,50 @@ button[type="submit"]:hover {
     font-size: 1.2rem;
     text-align: center;
 }
+
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.intro-heading {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.intro-subheading {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.intro-description {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.browse-companies-btn {
+    background-color: #1e88e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.browse-companies-btn:hover {
+    background-color: #1565c0;
+}
+
 
 
 

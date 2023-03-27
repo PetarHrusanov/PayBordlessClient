@@ -48,6 +48,12 @@ const invoiceService = {
         await request.delete(`${invoiceService.baseUrl}/delete/${id}`);
     },
 
+    setApprovalStatus: async (id, isApproved) => {
+            const request = requestInterceptor();
+            const data = { id, isApproved };
+            await request.put(`${invoiceService.baseUrl}/approve`, data);
+        },
+
 };
 
 export default invoiceService;

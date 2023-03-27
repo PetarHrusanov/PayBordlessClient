@@ -6,7 +6,7 @@ const Company = ({ id, name, vat, onActionClick }) => {
             <td>{name}</td>
             <td>{vat}</td>
             <td>
-                <button onClick={() => onActionClick(id)}>Create Invoice</button>
+                <button className="create-btn" onClick={() => onActionClick(id)}>Create Invoice</button>
             </td>
         </tr>
     );

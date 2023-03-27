@@ -28,16 +28,6 @@ const Header = () => {
                             Companies
                         </NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink to="/invoices" activeClassName="active">
-                            Invoices
-                        </NavLink>
-                    </li>
-                    <li className="nav-item">
-                        <NavLink to="/services" activeClassName="active">
-                             Services
-                        </NavLink>
-                     </li>
                     {!token && (
                         <React.Fragment>
                             <li className="nav-item">
@@ -54,6 +44,16 @@ const Header = () => {
                     )}
                     {token && (
                         <React.Fragment>
+                            <li className="nav-item">
+                                <NavLink to="/invoices" activeClassName="active">
+                                    Invoices
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink to="/services" activeClassName="active">
+                                    Services
+                                </NavLink>
+                            </li>
                             <li className="nav-item">
                                 <NavLink to="/profile" activeClassName="active">
                                     Profile

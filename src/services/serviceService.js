@@ -26,6 +26,8 @@ const serviceService = {
         }
     },
 
+
+
     edit: async (id, name, price, companyId) => {
         const request = requestInterceptor();
         const data = { id, name, price, companyId };

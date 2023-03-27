@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Service } from './Service';
-import { ServiceCreate } from '../services/ServiceCreate';
+import { InvoiceCreate } from '../invoices/InvoiceCreate';
 import serviceService from "../../services/serviceService";
 
 const Services = () => {
     const [servicesArray, setServicesArray] = useState([]);
     const [showCreateService, setShowCreateService] = useState(false);
-    const [selectedServiceId, setSelectedServiceId] = useState(null);
+    const [selectedService, setSelectedService] = useState(null);
 
     const fetchServices = () => {
         serviceService
@@ -23,8 +23,8 @@ const Services = () => {
         fetchServices();
     }, []);
 
-    const handleActionClick = (serviceId) => {
-        setSelectedServiceId(serviceId);
+    const handleActionClick = (service) => {
+        setSelectedService(service);
         setShowCreateService(true);
     };
 
@@ -46,13 +46,18 @@ const Services = () => {
                     </thead>
                     <tbody>
                     {servicesArray.map((service) => (
-                        <Service key={service.id} {...service} onActionClick={handleActionClick} />
+                        <Service key={service.id} {...service} onActionClick={() => handleActionClick(service)} />
                     ))}
                     </tbody>
                 </table>
             </div>
             {showCreateService && (
-                <ServiceCreate serviceId={selectedServiceId} onClose={handleClose} />
+                <InvoiceCreate
+                    companyId={selectedService && selectedService.companyId}
+                    serviceId={selectedService && selectedService.id}
+                    service={selectedService}
+                    onClose={handleClose}
+                />
             )}
         </>
     );

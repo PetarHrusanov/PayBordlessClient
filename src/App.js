@@ -6,12 +6,14 @@ import HomePage from "./components/HomePage";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Companies from "./components/companies/Companies";
-import CompanyCreate from "./components/companies/CompanyCreate";
+// import CompanyCreate from "./components/companies/CompanyCreate";
 import Services from "./components/services/Services";
-import { ServiceCreate } from "./components/services/ServiceCreate";
+// import { ServiceCreate } from "./components/services/ServiceCreate";
 import Invoices from "./components/invoices/Invoices";
-import {InvoiceCreate} from "./components/invoices/InvoiceCreate";
+// import {InvoiceCreate} from "./components/invoices/InvoiceCreate";
 import {Profile} from "./components/Profile";
+import PrivateRoute from './components/PrivateRoute';
+
 
 const App = () => {
     return (
@@ -22,13 +24,15 @@ const App = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/companies" element={<Companies />} />
                 <Route path="/invoices" element={<Invoices />} />
-                <Route path="/invoice-create" element={<InvoiceCreate />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/invoices" element={<PrivateRoute />}>
+                    <Route index element={<Invoices />} />
+                    </Route>
+                <Route path="/profile" element={<PrivateRoute />}>
+                    <Route index element={<Profile />} />
+                    </Route>
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/company-create" element={<CompanyCreate />} />
                 <Route path="/services" element={<Services />} />
-                <Route path="/service-create" element={<ServiceCreate />} /> */}
             </Routes>
         </Router>
     );

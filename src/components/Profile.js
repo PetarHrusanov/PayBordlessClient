@@ -118,12 +118,6 @@ export const Profile = () => {
         });
     };
 
-
-//     const handleClose = () => {
-//         setShowEditWindow(false);
-//         fetchCompanies();
-//     };
-
     if (!companiesArray || companiesArray.length === 0) {
         return <div>Loading...</div>;
     }
@@ -174,7 +168,7 @@ export const Profile = () => {
             </table>
           </div>
         <h2 className="heading">Your Companies</h2>
-        <button className="create-button" onClick={handleCompanyCreateClick}>Create Company</button>
+        <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
             <div className="table-wrapper">
                 <table className="table">
                     <thead>
@@ -196,7 +190,7 @@ export const Profile = () => {
                                 <td>{vat}</td>
                                 <td>{owner}</td>
                                 <td>
-                                    <button className="edit-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
+                                    <button className="create-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
                                 </td>
                             </tr>
                         );
@@ -208,7 +202,7 @@ export const Profile = () => {
             {showCompanyCreateWindow && <CompanyCreate />}
 
             <h2 className="heading">Your Services</h2>
-            <button className="create-button" onClick={handleServiceCreateClick}>Create Service</button>
+            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
                         <div className="table-wrapper">
                             <table className="table">
                                 <thead>
@@ -230,7 +224,7 @@ export const Profile = () => {
                                                 <td>{price}</td>
                                                 <td>{companyName}</td>
                                                 <td>
-                                                    <button className="edit-btn" onClick={() => handleServiceEditClick({ id, name, price, companyId })}>Edit</button>
+                                                    <button className="create-btn" onClick={() => handleServiceEditClick({ id, name, price, companyId })}>Edit</button>
                                                 </td>
                                             </tr>
                                         );
