@@ -2,7 +2,6 @@
 import React from 'react';
 import invoicesDummy from '../../dummy-data/invoices-dummy.json';
 import { Invoice } from './Invoice';
-import { Link } from 'react-router-dom';
 
 const Invoices = () => {
     const onInfoClick = (invoice) => {
@@ -11,11 +10,6 @@ const Invoices = () => {
 
     return (
         <>
-            <div className="create-button">
-                <Link to="/invoice-create">
-                    <button>Create Invoice</button>
-                </Link>
-            </div>
             <div className="table-wrapper">
                 <table className="table">
                     <thead>

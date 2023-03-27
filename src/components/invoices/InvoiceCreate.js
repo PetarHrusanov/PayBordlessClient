@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import companyService from "../../services/companyService";
+import invoiceService from "../../services/invoiceService";
+
 
 const InvoiceCreate = ({ companyId, onClose }) => {
     const [companyServices, setCompanyServices] = useState([]);
     const [selectedService, setSelectedService] = useState('');
     const [quantity, setQuantity] = useState(1);
+    const [price, setPrice] = useState(0);
+    const [companies, setCompanies] = useState([]);
+    const [recipientCompanyId, setRecipientCompanyId] = useState('');
+
 
     useEffect(() => {
         companyService
@@ -15,23 +21,44 @@ const InvoiceCreate = ({ companyId, onClose }) => {
             .catch((error) => {
                 console.error('Error fetching services:', error);
             });
+
+        companyService
+            .getByUserId()
+            .then((companies) => {
+                setCompanies(companies);
+            })
+            .catch((error) => {
+                console.error('Error fetching companies:', error);
+            });
     }, [companyId]);
 
     const handleServiceChange = (event) => {
-        setSelectedService(event.target.value);
+        const selected = companyServices.find(service => service.id === parseInt(event.target.value));
+        setSelectedService(selected.id);
+        setPrice(selected.price);
     };
 
     const handleQuantityChange = (event) => {
         setQuantity(event.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        // Add logic to submit the form and create an invoice
-
-        onClose();
+    const handleRecipientCompanyChange = (event) => {
+        setRecipientCompanyId(event.target.value);
     };
+
+
+   const handleSubmit = async (event) => {
+       event.preventDefault();
+
+       try {
+           const total = quantity * price;
+           await invoiceService.create(selectedService, quantity, total, recipientCompanyId);
+           onClose();
+       } catch (error) {
+           console.error('Error creating invoice:', error);
+       }
+   };
+
 
     return (
         <div className="create-invoice">
@@ -62,6 +89,40 @@ const InvoiceCreate = ({ companyId, onClose }) => {
                         onChange={handleQuantityChange}
                         required
                     />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="price">Price:</label>
+                    <input
+                        type="number"
+                        id="price"
+                        value={price}
+                        disabled
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="total">Total:</label>
+                    <input
+                        type="number"
+                        id="total"
+                        value={quantity * price}
+                        disabled
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="recipientCompany">Recipient Company:</label>
+                    <select
+                        id="recipientCompany"
+                        value={recipientCompanyId}
+                        onChange={handleRecipientCompanyChange}
+                        required
+                    >
+                        <option value="">Select a recipient company</option>
+                        {companies.map((company) => (
+                            <option key={company.id} value={company.id}>
+                                {company.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button type="submit">Create Invoice</button>
             </form>

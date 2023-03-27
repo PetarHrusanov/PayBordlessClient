@@ -5,6 +5,8 @@ import serviceService from "../services/serviceService";
 import { ServiceEdit } from "./services/ServiceEdit";
 import { ServiceCreate } from "../components/services/ServiceCreate";
 import CompanyCreate from "../components/companies/CompanyCreate";
+import invoiceService from "../services/invoiceService";
+
 
 export const Profile = () => {
     const [companiesArray, setCompaniesArray] = useState([]);
@@ -15,6 +17,9 @@ export const Profile = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [showCompanyCreateWindow, setShowCompanyCreateWindow] = useState(false);
     const [showServiceCreateWindow, setShowServiceCreateWindow] = useState(false);
+    const [invoicesArray, setInvoicesArray] = useState([]);
+    const [showApproveDisapproveButtons, setShowApproveDisapproveButtons] = useState(false);
+
 
     const fetchCompanies = () => {
         companyService.getByUserId()
@@ -36,11 +41,24 @@ export const Profile = () => {
                 });
         };
 
+        const fetchInvoices = () => {
+          invoiceService
+            .getUnapprovedByUserId()
+            .then((result) => {
+              setInvoicesArray(result);
+            })
+            .catch((error) => {
+              console.error("Error fetching invoices:", error);
+            });
+        };
+
+
 
 
     useEffect(() => {
             fetchCompanies();
             fetchServices(); // Call fetchServices here
+            fetchInvoices();
         }, []);
 
     const handleEditClick = (company) => {
@@ -89,6 +107,18 @@ export const Profile = () => {
         setShowServiceCreateWindow(!showServiceCreateWindow);
         };
 
+    const handleInvoiceApproval = (invoiceId, isApproved) => {
+      invoiceService
+        .setApprovalStatus(invoiceId, isApproved)
+        .then(() => {
+          fetchInvoices();
+        })
+        .catch((error) => {
+          console.error("Error updating invoice approval status:", error);
+        });
+    };
+
+
 //     const handleClose = () => {
 //         setShowEditWindow(false);
 //         fetchCompanies();
@@ -100,8 +130,51 @@ export const Profile = () => {
 
     return (
         <div className="container">
+        <h2 className="heading">Your Invoices</h2>
+          <div className="table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Service</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Recipient Company</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoicesArray.map((item) => {
+                  const { id, serviceName, quantity, total, recipientName } = item;
+                  return (
+                    <tr key={id}>
+                      <td>{id}</td>
+                      <td>{serviceName}</td>
+                      <td>{quantity}</td>
+                      <td>{total}</td>
+                      <td>{recipientName}</td>
+                      <td>
+                        <button
+                          className="approve-btn"
+                          onClick={() => handleInvoiceApproval(id, true)}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="disapprove-btn"
+                          onClick={() => handleInvoiceApproval(id, false)}
+                        >
+                          Disapprove
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         <h2 className="heading">Your Companies</h2>
-        <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
+        <button className="create-button" onClick={handleCompanyCreateClick}>Create Company</button>
             <div className="table-wrapper">
                 <table className="table">
                     <thead>
@@ -135,7 +208,7 @@ export const Profile = () => {
             {showCompanyCreateWindow && <CompanyCreate />}
 
             <h2 className="heading">Your Services</h2>
-            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
+            <button className="create-button" onClick={handleServiceCreateClick}>Create Service</button>
                         <div className="table-wrapper">
                             <table className="table">
                                 <thead>
