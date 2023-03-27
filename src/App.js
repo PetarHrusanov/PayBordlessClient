@@ -1,22 +1,22 @@
 // App.js
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from "./components/shared/Header";
 import HomePage from "./components/HomePage";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Companies from "./components/companies/Companies";
-// import CompanyCreate from "./components/companies/CompanyCreate";
 import Services from "./components/services/Services";
-// import { ServiceCreate } from "./components/services/ServiceCreate";
 import Invoices from "./components/invoices/Invoices";
-// import {InvoiceCreate} from "./components/invoices/InvoiceCreate";
 import {Profile} from "./components/Profile";
 import PrivateRoute from './components/PrivateRoute';
+import InvoiceContext from './contexts/InvoiceContext';
 
 
 const App = () => {
+    const [pendingInvoices, setPendingInvoices] = useState(0);
     return (
+    <InvoiceContext.Provider value={{ pendingInvoices, setPendingInvoices }}>
         <Router>
             <Header />
 
@@ -35,6 +35,7 @@ const App = () => {
                 <Route path="/services" element={<Services />} />
             </Routes>
         </Router>
+        </InvoiceContext.Provider>
     );
 };
 

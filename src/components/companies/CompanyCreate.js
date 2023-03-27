@@ -1,7 +1,7 @@
 import {useState} from "react";
 import companyService from "../../services/companyService";
 
-const CompanyCreate = () => {
+const CompanyCreate = ({ onSubmit }) => {
     const [name, setName] = useState('');
     const [vat, setVat] = useState('');
     const [owner, setOwner] = useState('');
@@ -41,10 +41,11 @@ const CompanyCreate = () => {
         try {
             await companyService.create(name, vat, owner);
             alert('Company created successfully!');
-            /*window.location.href = '/';*/
-        } catch (err) {
+            onSubmit();
+            }
+        catch (err) {
             console.error(err);
-        }
+            }
 
     };
 

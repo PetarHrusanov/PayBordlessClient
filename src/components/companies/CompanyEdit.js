@@ -5,7 +5,7 @@ export const CompanyEdit = ({company, onSubmit, onClose}) => {
     const [name, setName] = useState(company.name);
     const [vat, setVat] = useState(company.vat);
     const [owner, setOwner] = useState(company.owner);
-    const [userId, setUserId] = useState(company.userId);
+    const userId = company.userId;
 
     const handleSubmit = async (e) => {
         e.preventDefault();

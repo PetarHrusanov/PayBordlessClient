@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { NavLink } from 'react-router-dom';
 import {authService} from "../../services/authService";
+// ... other imports ...
+import InvoiceContext from '../../contexts/InvoiceContext';
 
 const Header = () => {
     const [token, setToken] = useState(getToken());
+    const { pendingInvoices } = useContext(InvoiceContext);
     function getToken() {
         const token = localStorage.getItem('token');
         return token ? token : null;
@@ -56,7 +59,12 @@ const Header = () => {
                             </li>
                             <li className="nav-item">
                                 <NavLink to="/profile" activeClassName="active">
-                                    Profile
+                                  Profile
+                                  {pendingInvoices > 0 && (
+                                    <span className="pending-invoices-count" title="Pending invoices">
+                                      {pendingInvoices}
+                                    </span>
+                                  )}
                                 </NavLink>
                             </li>
                             <li className="nav-item">
