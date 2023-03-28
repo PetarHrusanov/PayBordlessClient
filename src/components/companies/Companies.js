@@ -41,6 +41,7 @@ const Companies = () => {
                     <tr>
                         <th>Name</th>
                         <th>VAT</th>
+                        <th>Owner</th>
                         <th>Actions</th>
                     </tr>
                     </thead>

@@ -8,73 +8,26 @@ import CompanyCreate from "../components/companies/CompanyCreate";
 import invoiceService from "../services/invoiceService";
 import InvoiceContext from '../contexts/InvoiceContext';
 import Modal from './shared/Modal';
+import useFetchData from "../hooks/useFetchData";
+import SuccessMessage from './shared/SuccessMessage';
 
 
 export const Profile = () => {
-    const [companiesArray, setCompaniesArray] = useState([]);
+
+    const [companiesArray, setCompaniesArray, loadingCompanies] = useFetchData(companyService.getByUserId);
+    const [servicesArray, setServicesArray, loadingServices] = useFetchData(serviceService.getByUserId);
+    const [invoicesArray, setInvoicesArray, loadingInvoices] = useFetchData(invoiceService.getUnapprovedByUserId);
+
     const [showEditWindow, setShowEditWindow] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState(null);
-    const [servicesArray, setServicesArray] = useState([]); // Add this line
     const [showServiceEditWindow, setShowServiceEditWindow] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
     const [showCompanyCreateWindow, setShowCompanyCreateWindow] = useState(false);
     const [showServiceCreateWindow, setShowServiceCreateWindow] = useState(false);
-    const [invoicesArray, setInvoicesArray] = useState([]);
     const [showApproveDisapproveButtons, setShowApproveDisapproveButtons] = useState(false);
-    const [loadingCompanies, setLoadingCompanies] = useState(true);
-    const [loadingServices, setLoadingServices] = useState(true);
-    const [loadingInvoices, setLoadingInvoices] = useState(true);
     const { pendingInvoices, setPendingInvoices } = useContext(InvoiceContext);
 
-
-    const fetchCompanies = () => {
-            setLoadingCompanies(true);
-            companyService.getByUserId()
-                .then(result => {
-                    setCompaniesArray(result);
-                    setLoadingCompanies(false);
-                })
-                .catch(error => {
-                    console.error('Error fetching companies:', error);
-                    setLoadingCompanies(false);
-                });
-        };
-
-        const fetchServices = () => {
-            setLoadingServices(true);
-            serviceService.getByUserId()
-                .then(result => {
-                    setServicesArray(result);
-                    setLoadingServices(false);
-                })
-                .catch(error => {
-                    console.error('Error fetching services:', error);
-                    setLoadingServices(false);
-                });
-        };
-
-        const fetchInvoices = () => {
-            setLoadingInvoices(true);
-            invoiceService.getUnapprovedByUserId()
-                .then((result) => {
-                    setInvoicesArray(result);
-                    setPendingInvoices(result.length);
-                    setLoadingInvoices(false);
-                })
-                .catch((error) => {
-                    console.error("Error fetching invoices:", error);
-                    setLoadingInvoices(false);
-                });
-        };
-
-
-
-
-    useEffect(() => {
-            fetchCompanies();
-            fetchServices(); // Call fetchServices here
-            fetchInvoices();
-        }, []);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     const handleEditClick = (company) => {
         setSelectedCompany(company);
@@ -86,7 +39,7 @@ export const Profile = () => {
             .then(() => {
                 setShowEditWindow(false);
                 setSelectedCompany(null);
-                fetchCompanies();
+                setCompaniesArray((prevCompanies) => prevCompanies.map(company => company.id === updatedCompany.id ? updatedCompany : company));
             })
             .catch(error => {
                 console.error('Error updating company:', error);
@@ -94,48 +47,68 @@ export const Profile = () => {
     };
 
     const handleServiceEditClick = (service) => {
-      setSelectedService(service);
-      setShowServiceEditWindow(true);
+        setSelectedService(service);
+        setShowServiceEditWindow(true);
     };
 
     const handleServiceEditSubmit = (updatedService) => {
         if (updatedService.isDeleted) {
-            // Remove the deleted service from the servicesArray
             setServicesArray(servicesArray.filter(service => service.id !== updatedService.id));
         } else {
-            // Update the service in the servicesArray
             setServicesArray(
                 servicesArray.map(service =>
                     service.id === updatedService.id ? updatedService : service
                 )
             );
         }
-        // Close the edit window
         setShowServiceEditWindow(false);
     };
 
     const handleCompanyCreateClick = () => {
         setShowCompanyCreateWindow(!showCompanyCreateWindow);
-        };
+    };
 
-    const handleServiceCreateClick = () => {
-        setShowServiceCreateWindow(!showServiceCreateWindow);
-        };
-
-    const handleInvoiceApproval = (invoiceId, isApproved) => {
-      invoiceService
-        .setApprovalStatus(invoiceId, isApproved)
+    const handleCompanyCreateSubmit = (newCompany) => {
+      companyService
+        .create(newCompany.name, newCompany.vat, newCompany.owner)
         .then(() => {
-          fetchInvoices();
+          setSuccessMessage("Company created successfully!");
+          handleCompanyCreateClick();
+          // Refetch companies
+          companyService
+            .getByUserId()
+            .then((fetchedCompanies) => {
+              setCompaniesArray(fetchedCompanies);
+            })
+            .catch((error) => {
+              console.error("Error fetching companies:", error);
+            });
         })
-        .catch((error) => {
-          console.error("Error updating invoice approval status:", error);
+        .catch((err) => {
+          console.error(err);
         });
     };
 
-   if (loadingCompanies || loadingServices || loadingInvoices) {
-       return <div className="loading-container">Loading...</div>;
-   }
+    const handleServiceCreateClick = () => {
+        setShowServiceCreateWindow(!showServiceCreateWindow);
+    };
+
+    const handleInvoiceApproval = (invoiceId, isApproved) => {
+        invoiceService
+            .setApprovalStatus(invoiceId, isApproved)
+            .then((updatedInvoice) => {
+                setInvoicesArray((prevInvoices) => prevInvoices.filter(invoice => invoice.id !== updatedInvoice.id));
+                setPendingInvoices((prevPendingInvoices) => prevPendingInvoices - 1);
+            })
+            .catch((error) => {
+                console.error("Error updating invoice approval status:", error);
+            });
+    };
+
+    if (loadingCompanies || loadingServices || loadingInvoices) {
+        return <div className="loading-container">Loading...</div>;
+    }
+
 
 
     return (
@@ -189,19 +162,18 @@ export const Profile = () => {
            )}
         <h2 className="heading">Your Companies</h2>
         <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
-        {showCompanyCreateWindow && (
-            <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
-              <CompanyCreate />
-            </Modal>
-          )}
-          {showCompanyCreateWindow && (
-              <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
-                <CompanyCreate onSubmit={() => {
-                  handleCompanyCreateClick();
-                  fetchCompanies();
-                }} />
-              </Modal>
-            )}
+         {showCompanyCreateWindow && (
+             <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
+                 <CompanyCreate
+                     onSubmit={handleCompanyCreateSubmit}
+                 />
+             </Modal>
+         )}
+         {successMessage && (
+           <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+             <SuccessMessage message={successMessage} />
+           </Modal>
+         )}
         {companiesArray.length > 0 ? (
             <div className="table-wrapper">
                 <table className="table">
@@ -216,6 +188,7 @@ export const Profile = () => {
                     </thead>
                     <tbody>
                     {companiesArray.map((item) => {
+                    console.log(item);
                         const { id, name, vat, owner, userId } = item;
                         return (
                             <tr key={id}>
@@ -240,18 +213,18 @@ export const Profile = () => {
                 <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onClose={() => setShowEditWindow(false)} />
               </Modal>
             )}
-            {showCompanyCreateWindow && <CompanyCreate />}
 
             <h2 className="heading">Your Services</h2>
             <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
-            {showServiceCreateWindow && (
-                <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>
-                    <ServiceCreate onClose={() => {
-                        handleServiceCreateClick();
-                        fetchServices();
-                    }} />
-                </Modal>
-            )}
+           {showServiceCreateWindow && (
+                 <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>
+                   <ServiceCreate
+                     onClose={() => {
+                       handleServiceCreateClick();
+                     }}
+                   />
+                 </Modal>
+               )}
 
             {servicesArray.length > 0 ? (
             <div className="table-wrapper">
@@ -286,7 +259,11 @@ export const Profile = () => {
             ) : (
             <p>No services found. Please create a service.</p>
             )}
-            {showServiceEditWindow && <ServiceEdit service={selectedService} companies={companiesArray} onSubmit={handleServiceEditSubmit} onClose={() => setShowServiceEditWindow(false)} />}
+            {showServiceEditWindow && (
+                        <Modal show={showServiceEditWindow} onClose={() => setShowServiceEditWindow(false)}>
+                            <ServiceEdit service={selectedService} onSubmit={handleServiceEditSubmit} />
+                        </Modal>
+                    )}
             {showServiceCreateWindow && <ServiceCreate />}
     </div>
     )

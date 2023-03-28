@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import companyService from "../../services/companyService";
 
-export const CompanyEdit = ({company, onSubmit, onClose}) => {
+export const CompanyEdit = ({company, onSubmit}) => {
     const [name, setName] = useState(company.name);
     const [vat, setVat] = useState(company.vat);
     const [owner, setOwner] = useState(company.owner);
@@ -26,14 +26,9 @@ export const CompanyEdit = ({company, onSubmit, onClose}) => {
         }
     };
 
-    const handleClose = () => {
-        onClose();
-    };
-
     return (
-        <div className="edit-window">
+        <div className="create-company">
             <h3>Edit Company</h3>
-            <button className="close-btn" onClick={handleClose}>&times;</button>
             <form onSubmit={handleSubmit}>
                 <label>Name:</label>
                 <input type="text" value={name} onChange={(e) => setName(e.target.value)}/>
