@@ -34,7 +34,7 @@ const companyService = {
 
     delete: async (id) => {
         const request = requestInterceptor();
-        await request.delete(`${companyService.baseUrl}/${id}`);
+        await request.delete(`${companyService.baseUrl}/delete/${id}`);
     },
 
     getServicesByCompanyId: async (companyId) => {

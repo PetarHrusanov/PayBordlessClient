@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import companyService from "../services/companyService";
 import {CompanyEdit} from "./companies/CompanyEdit";
 import serviceService from "../services/serviceService";
@@ -46,6 +46,17 @@ export const Profile = () => {
             });
     };
 
+    const handleCompanyDelete = (companyId) => {
+            companyService.delete(companyId)
+                .then(() => {
+                    setCompaniesArray(companiesArray.filter(company => company.id !== companyId));
+                    setSuccessMessage("User Deleted");
+                })
+                .catch(error => {
+                    console.error('Error deleting company:', error);
+                });
+        };
+
     const handleServiceEditClick = (service) => {
         setSelectedService(service);
         setShowServiceEditWindow(true);
@@ -74,7 +85,6 @@ export const Profile = () => {
         .then(() => {
           setSuccessMessage("Company created successfully!");
           handleCompanyCreateClick();
-          // Refetch companies
           companyService
             .getByUserId()
             .then((fetchedCompanies) => {
@@ -93,6 +103,26 @@ export const Profile = () => {
         setShowServiceCreateWindow(!showServiceCreateWindow);
     };
 
+    const handleServiceCreateSubmit = (newService) => {
+      serviceService
+        .create(newService.name, newService.price, newService.companyId)
+        .then(() => {
+          setSuccessMessage("Service created successfully!");
+          handleServiceCreateClick();
+          serviceService
+            .getByUserId()
+            .then((fetchedServices) => {
+              setServicesArray(fetchedServices);
+            })
+            .catch((error) => {
+              console.error("Error fetching companies:", error);
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
+
     const handleInvoiceApproval = (invoiceId, isApproved) => {
         invoiceService
             .setApprovalStatus(invoiceId, isApproved)
@@ -108,7 +138,6 @@ export const Profile = () => {
     if (loadingCompanies || loadingServices || loadingInvoices) {
         return <div className="loading-container">Loading...</div>;
     }
-
 
 
     return (
@@ -208,23 +237,46 @@ export const Profile = () => {
              ) : (
                     <p>No companies found. Please create a company.</p>
                   )}
+                  {successMessage && (
+                             <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+                               <SuccessMessage message={successMessage} />
+                             </Modal>
+                           )}
             {showEditWindow && (
-              <Modal show={showEditWindow} onClose={() => setShowEditWindow(false)}>
-                <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onClose={() => setShowEditWindow(false)} />
-              </Modal>
-            )}
+                          <Modal show={showEditWindow} onClose={() => setShowEditWindow(false)}>
+                            <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onDelete={() => handleCompanyDelete(selectedCompany.id)} onClose={() => setShowEditWindow(false)} />
+                          </Modal>
+                        )}
 
             <h2 className="heading">Your Services</h2>
-            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
+           <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
            {showServiceCreateWindow && (
-                 <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>
-                   <ServiceCreate
-                     onClose={() => {
-                       handleServiceCreateClick();
-                     }}
-                   />
-                 </Modal>
-               )}
+             <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>
+               <ServiceCreate
+                    onSubmit={handleServiceCreateSubmit} />
+             </Modal>
+           )}
+           {successMessage && (
+             <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+               <SuccessMessage message={successMessage} />
+             </Modal>
+             )}
+
+
+              <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
+                      {showCompanyCreateWindow && (
+                          <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
+                              <CompanyCreate
+                                  onSubmit={handleCompanyCreateSubmit}
+                              />
+                          </Modal>
+                      )}
+                      {successMessage && (
+                        <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+                          <SuccessMessage message={successMessage} />
+                        </Modal>
+                      )}
+
 
             {servicesArray.length > 0 ? (
             <div className="table-wrapper">
@@ -264,7 +316,7 @@ export const Profile = () => {
                             <ServiceEdit service={selectedService} onSubmit={handleServiceEditSubmit} />
                         </Modal>
                     )}
-            {showServiceCreateWindow && <ServiceCreate />}
+
     </div>
     )
 };

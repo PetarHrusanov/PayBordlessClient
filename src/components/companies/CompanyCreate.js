@@ -38,8 +38,7 @@ const CompanyCreate = ({ onSubmit }) => {
       return;
     }
 
-    await companyService.create(name, vat, owner);
-            onSubmit({name, vat, owner});// Call onSubmit without any arguments
+    onSubmit({name, vat, owner});
   };
 
   return (

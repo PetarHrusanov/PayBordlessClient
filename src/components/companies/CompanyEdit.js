@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import companyService from "../../services/companyService";
 
-export const CompanyEdit = ({company, onSubmit}) => {
+export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
     const [name, setName] = useState(company.name);
     const [vat, setVat] = useState(company.vat);
     const [owner, setOwner] = useState(company.owner);
@@ -18,13 +18,14 @@ export const CompanyEdit = ({company, onSubmit}) => {
     };
 
     const handleDelete = async () => {
-        try {
-            await companyService.delete(company.id);
-            onSubmit({...company, isDeleted: true});
-        } catch (error) {
-            console.error('Error deleting company:', error);
-        }
-    };
+            try {
+                await companyService.delete(company.id);
+                onDelete();
+                onClose();
+            } catch (error) {
+                console.error('Error deleting company:', error);
+            }
+        };
 
     return (
         <div className="create-company">

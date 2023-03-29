@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import companyService from '../../services/companyService';
 import serviceService from '../../services/serviceService';
 
-const ServiceCreate = ({ onClose }) => {
+const ServiceCreate = ({ onSubmit }) => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [companyId, setCompanyId] = useState('');
@@ -39,13 +39,7 @@ const ServiceCreate = ({ onClose }) => {
             return;
         }
 
-        try {
-            await serviceService.create(name, price, companyId);
-            alert('Service created successfully!');
-            onClose();
-        } catch (err) {
-            console.error(err);
-        }
+        onSubmit({name, price, companyId})
     };
 
     return (
@@ -79,7 +73,6 @@ const ServiceCreate = ({ onClose }) => {
                 />
                 <button type="submit" className="edit-window-button">Create Service</button>
             </form>
-            <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
     );
 };
