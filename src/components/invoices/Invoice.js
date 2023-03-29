@@ -1,8 +1,8 @@
 import React from 'react';
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 
 export const Invoice = ({ invoice, onDownloadClick }) => {
-  const { id, serviceName, quantity, total } = invoice;
+  const { serviceName, quantity, total } = invoice;
 
   return (
     <tr>

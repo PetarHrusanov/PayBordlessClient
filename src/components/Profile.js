@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import companyService from "../services/companyService";
 import {CompanyEdit} from "./companies/CompanyEdit";
 import serviceService from "../services/serviceService";
@@ -24,10 +24,13 @@ export const Profile = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [showCompanyCreateWindow, setShowCompanyCreateWindow] = useState(false);
     const [showServiceCreateWindow, setShowServiceCreateWindow] = useState(false);
-    const [showApproveDisapproveButtons, setShowApproveDisapproveButtons] = useState(false);
-    const { pendingInvoices, setPendingInvoices } = useContext(InvoiceContext);
+    const { setPendingInvoices } = useContext(InvoiceContext);
 
     const [successMessage, setSuccessMessage] = useState(null);
+
+    useEffect(() => {
+      setPendingInvoices(invoicesArray.length);
+    }, [invoicesArray, setPendingInvoices]);
 
     const handleEditClick = (company) => {
         setSelectedCompany(company);
@@ -252,8 +255,7 @@ export const Profile = () => {
            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
            {showServiceCreateWindow && (
              <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>
-               <ServiceCreate
-                    onSubmit={handleServiceCreateSubmit} />
+               <ServiceCreate onSubmit={handleServiceCreateSubmit} />
              </Modal>
            )}
            {successMessage && (
@@ -261,23 +263,6 @@ export const Profile = () => {
                <SuccessMessage message={successMessage} />
              </Modal>
              )}
-
-
-              <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
-                      {showCompanyCreateWindow && (
-                          <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
-                              <CompanyCreate
-                                  onSubmit={handleCompanyCreateSubmit}
-                              />
-                          </Modal>
-                      )}
-                      {successMessage && (
-                        <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
-                          <SuccessMessage message={successMessage} />
-                        </Modal>
-                      )}
-
-
             {servicesArray.length > 0 ? (
             <div className="table-wrapper">
                 <table className="table">

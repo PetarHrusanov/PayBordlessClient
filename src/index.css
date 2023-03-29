@@ -71,29 +71,6 @@
     text-align: center;
 }
 
-/*.actions .btn {*/
-/*    background-color: #f5a623;*/
-/*    border: none;*/
-/*    color: #fff;*/
-/*    cursor: pointer;*/
-/*    padding: 0.5rem 1rem;*/
-/*    transition: background-color 0.3s;*/
-/*}*/
-
-/*.actions .btn:hover {*/
-/*    background-color: #e59400;*/
-/*}*/
-
-/*.actions .btn.create-btn {*/
-/*    margin-right: 1rem;*/
-/*}*/
-
-/*.actions .btn svg {*/
-/*    width: 1rem;*/
-/*    height: auto;*/
-/*    vertical-align: middle;*/
-/*}*/
-
 /* CompanyCreate.css */
 .create-company {
     text-align: center;

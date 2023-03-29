@@ -1,5 +1,4 @@
 import { useState } from "react";
-import companyService from "../../services/companyService";
 
 const CompanyCreate = ({ onSubmit }) => {
   const [name, setName] = useState("");

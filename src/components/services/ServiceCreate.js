@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import companyService from '../../services/companyService';
-import serviceService from '../../services/serviceService';
 
 const ServiceCreate = ({ onSubmit }) => {
     const [name, setName] = useState('');
@@ -43,7 +42,7 @@ const ServiceCreate = ({ onSubmit }) => {
     };
 
     return (
-        <div className="edit-window">
+        <div className="create-company">
             <h3>Create Service</h3>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="company">Company:</label>
