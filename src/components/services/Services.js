@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Service } from './Service';
 import { InvoiceCreate } from '../invoices/InvoiceCreate';
 import serviceService from "../../services/serviceService";
+import Modal from '../shared/Modal';
+import SuccessMessage from '../shared/SuccessMessage';
 
 const Services = () => {
     const [servicesArray, setServicesArray] = useState([]);
     const [showCreateService, setShowCreateService] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
 
     const fetchServices = () => {
         serviceService
@@ -30,6 +33,7 @@ const Services = () => {
 
     const handleClose = () => {
         setShowCreateService(false);
+        setSuccessMessage('Invoice Created');
         fetchServices();
     };
 
@@ -51,13 +55,21 @@ const Services = () => {
                     </tbody>
                 </table>
             </div>
+            {successMessage && (
+                <Modal show={!!successMessage} onClose={() => setSuccessMessage('')}>
+                    <SuccessMessage message={successMessage} />
+                </Modal>
+            )}
             {showCreateService && (
-                <InvoiceCreate
-                    companyId={selectedService && selectedService.companyId}
-                    serviceId={selectedService && selectedService.id}
-                    service={selectedService}
-                    onClose={handleClose}
-                />
+                <Modal show={showCreateService} onClose={handleClose}>
+                    <InvoiceCreate
+                        companyId={selectedService && selectedService.companyId}
+                        serviceId={selectedService && selectedService.id}
+                        service={selectedService}
+                        onClose={handleClose}
+                        onSuccess={(message) => setSuccessMessage(message)}
+                    />
+                </Modal>
             )}
         </>
     );

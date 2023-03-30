@@ -22,15 +22,19 @@ const Invoices = () => {
   }, []);
 
   const handleDownloadClick = (invoice) => {
-    const { id, serviceName, quantity, total } = invoice;
+    /* const { id, serviceName, quantity, total } = invoice; */
+    const { id, serviceName, quantity, total, issuerName, recipientName } = invoice;
+
 
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text(`Invoice #${id}`, 10, 10);
     doc.setFontSize(14);
     doc.text(`Service: ${serviceName}`, 10, 30);
-    doc.text(`Quantity: ${quantity}`, 10, 40);
-    doc.text(`Total: ${total}`, 10, 50);
+    doc.text(`Issued by : ${issuerName}`, 10, 40);
+    doc.text(`Issued for : ${recipientName}`, 10, 50);
+    doc.text(`Quantity: ${quantity}`, 10, 60);
+    doc.text(`Total: ${total}`, 10, 70);
 
     doc.save(`Invoice-${id}.pdf`);
   };
@@ -44,6 +48,8 @@ const Invoices = () => {
               <th>Service Name</th>
               <th>Quantity</th>
               <th>Total</th>
+              <th>Issuer</th>
+              <th>Recipient</th>
               <th>Actions</th>
             </tr>
           </thead>
