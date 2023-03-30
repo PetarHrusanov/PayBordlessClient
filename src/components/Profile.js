@@ -129,9 +129,14 @@ export const Profile = () => {
     const handleInvoiceApproval = (invoiceId, isApproved) => {
         invoiceService
             .setApprovalStatus(invoiceId, isApproved)
-            .then((updatedInvoice) => {
-                setInvoicesArray((prevInvoices) => prevInvoices.filter(invoice => invoice.id !== updatedInvoice.id));
-                setPendingInvoices((prevPendingInvoices) => prevPendingInvoices - 1);
+            .then(()=>{ invoiceService
+            .getUnapprovedByUserId()
+            .then((fetchedInvoices) => {
+                setInvoicesArray(fetchedInvoices);
+                setPendingInvoices((prevPendingInvoices) =>  prevPendingInvoices - 1);
+                }).catch((error) => {
+                console.error("Error fetching companies:", error);
+             });
             })
             .catch((error) => {
                 console.error("Error updating invoice approval status:", error);
