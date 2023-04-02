@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import invoiceService from '../../services/invoiceService';
 import { Invoice } from './Invoice';
 import jsPDF from 'jspdf';
+import useFetchData from "../../hooks/useFetchData";
 
 const Invoices = () => {
-  const [invoicesArray, setInvoicesArray] = useState([]);
 
-  const fetchInvoices = () => {
-    invoiceService
-      .getByUserId()
-      .then((result) => {
-        setInvoicesArray(result);
-      })
-      .catch((error) => {
-        console.error('Error fetching invoices:', error);
-      });
-  };
-
-  useEffect(() => {
-    fetchInvoices();
-  }, []);
-
+  const [invoicesArray, setInvoicesArray, loadingInvoices] = useFetchData(invoiceService.getByUserId);
   const handleDownloadClick = (invoice) => {
-    /* const { id, serviceName, quantity, total } = invoice; */
-    const { id, serviceName, quantity, total, issuerName, recipientName } = invoice;
+  const { id, serviceName, quantity, total, issuerName, recipientName } = invoice;
 
 
     const doc = new jsPDF();
@@ -38,6 +23,10 @@ const Invoices = () => {
 
     doc.save(`Invoice-${id}.pdf`);
   };
+
+  if (loadingInvoices) {
+    return <div className="loading-container">Loading...</div>;
+    }
 
   return (
     <>
