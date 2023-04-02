@@ -6,7 +6,7 @@ import useFetchData from "../../hooks/useFetchData";
 
 const Invoices = () => {
 
-  const [invoicesArray, setInvoicesArray, loadingInvoices] = useFetchData(invoiceService.getByUserId);
+  const [invoicesArray, _, loadingInvoices] = useFetchData(invoiceService.getByUserId);
   const handleDownloadClick = (invoice) => {
   const { id, serviceName, quantity, total, issuerName, recipientName } = invoice;
 

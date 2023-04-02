@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Service } from './Service';
 import { InvoiceCreate } from '../invoices/InvoiceCreate';
 import serviceService from "../../services/serviceService";
 import Modal from '../shared/Modal';
 import SuccessMessage from '../shared/SuccessMessage';
+import useFetchData from "../../hooks/useFetchData";
 
 const Services = () => {
-    const [servicesArray, setServicesArray] = useState([]);
+//     const [servicesArray, setServicesArray] = useState([]);
+    const [servicesArray, setServicesArray, loadingServices] = useFetchData(serviceService.getAll);
     const [showCreateService, setShowCreateService] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
-
-    const fetchServices = () => {
-        serviceService
-            .getAll()
-            .then((result) => {
-                setServicesArray(result);
-            })
-            .catch((error) => {
-                console.error('Error fetching services:', error);
-            });
-    };
-
-    useEffect(() => {
-        fetchServices();
-    }, []);
 
     const handleActionClick = (service) => {
         setSelectedService(service);
@@ -34,8 +21,18 @@ const Services = () => {
     const handleClose = () => {
         setShowCreateService(false);
         setSuccessMessage('Invoice Created');
-        fetchServices();
+        serviceService
+                .getAll()
+                .then((fetchedServices) => {
+                    setServicesArray(fetchedServices);
+                 }).catch((error) => {
+                    console.error("Error fetching companies:", error);
+                 });
     };
+
+     if (loadingServices) {
+        return <div className="loading-container">Loading...</div>;
+     }
 
     return (
         <>
