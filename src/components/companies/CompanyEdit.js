@@ -18,13 +18,8 @@ export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
     };
 
     const handleDelete = async () => {
-            try {
-                await companyService.delete(company.id);
-                onDelete();
-                onClose();
-            } catch (error) {
-                console.error('Error deleting company:', error);
-            }
+        onDelete();
+        onClose();
         };
 
     return (

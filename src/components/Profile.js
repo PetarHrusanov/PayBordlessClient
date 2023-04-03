@@ -53,9 +53,11 @@ export const Profile = () => {
             companyService.delete(companyId)
                 .then(() => {
                     setCompaniesArray(companiesArray.filter(company => company.id !== companyId));
-                    setSuccessMessage("User Deleted");
+                    setSuccessMessage("Company Deleted");
                 })
                 .catch(error => {
+                    const errorMessage = `Error deleting company: ${error}`;
+                    setSuccessMessage(errorMessage);
                     console.error('Error deleting company:', error);
                 });
         };
@@ -77,6 +79,19 @@ export const Profile = () => {
         }
         setShowServiceEditWindow(false);
     };
+
+    const handleServiceDelete = (serviceId) => {
+                serviceService.delete(serviceId)
+                    .then(() => {
+                        setServicesArray(servicesArray.filter(service => service.id !== serviceId));
+                        setSuccessMessage("Service Deleted");
+                    })
+                    .catch(error => {
+                        const errorMessage = `Error deleting service: ${error}`;
+                        setSuccessMessage(errorMessage);
+                        console.error('Error deleting service:', error);
+                    });
+            };
 
     const handleCompanyCreateClick = () => {
         setShowCompanyCreateWindow(!showCompanyCreateWindow);
@@ -302,11 +317,10 @@ export const Profile = () => {
             <p>No services found. Please create a service.</p>
             )}
             {showServiceEditWindow && (
-                        <Modal show={showServiceEditWindow} onClose={() => setShowServiceEditWindow(false)}>
-                            <ServiceEdit service={selectedService} onSubmit={handleServiceEditSubmit} />
-                        </Modal>
-                    )}
-
+            <Modal show={showServiceEditWindow} onClose={() => setShowServiceEditWindow(false)}>
+                <ServiceEdit service={selectedService} onSubmit={handleServiceEditSubmit} onDelete={() => handleServiceDelete(selectedService.id)} onClose={() => setShowServiceEditWindow(false)} />
+            </Modal>
+           )}
     </div>
     )
 };

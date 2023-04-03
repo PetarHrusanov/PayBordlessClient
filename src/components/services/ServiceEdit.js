@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import serviceService from "../../services/serviceService";
 
-export const ServiceEdit = ({ service, onSubmit }) => {
+export const ServiceEdit = ({ service, onSubmit, onDelete, onClose }) => {
     const [name, setName] = useState(service.name);
     const [price, setPrice] = useState(service.price);
     const companyId = service.companyId;
@@ -17,13 +17,9 @@ export const ServiceEdit = ({ service, onSubmit }) => {
     };
 
     const handleDelete = async () => {
-        try {
-            await serviceService.delete(service.id);
-            onSubmit({ ...service, isDeleted: true });
-        } catch (error) {
-            console.error('Error deleting service:', error);
-        }
-    };
+            onDelete();
+            onClose();
+            };
 
     return (
         <div className="create-company">
@@ -35,7 +31,7 @@ export const ServiceEdit = ({ service, onSubmit }) => {
                 <input type="text" value={price} onChange={(e) => setPrice(e.target.value)} />
                 <button type="submit">Save</button>
             </form>
-            <button className="delete-btn" onClick={handleDelete}>Delete</button>
+           <button className="delete-btn" onClick={handleDelete}>Delete</button>
         </div>
     );
 };
