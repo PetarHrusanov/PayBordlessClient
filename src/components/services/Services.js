@@ -20,7 +20,6 @@ const Services = () => {
 
     const handleClose = () => {
         setShowCreateService(false);
-        setSuccessMessage('Invoice Created');
         serviceService
                 .getAll()
                 .then((fetchedServices) => {
@@ -29,6 +28,10 @@ const Services = () => {
                     console.error("Error fetching companies:", error);
                  });
     };
+
+    const handleInvoiceCreated = () => {
+        setSuccessMessage('Invoice Created');
+      };
 
      if (loadingServices) {
         return <div className="loading-container">Loading...</div>;
@@ -64,7 +67,7 @@ const Services = () => {
                         serviceId={selectedService && selectedService.id}
                         service={selectedService}
                         onClose={handleClose}
-                        onSuccess={(message) => setSuccessMessage(message)}
+                        onInvoiceCreated={handleInvoiceCreated}
                     />
                 </Modal>
             )}

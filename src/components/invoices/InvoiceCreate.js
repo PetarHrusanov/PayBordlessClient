@@ -3,7 +3,7 @@ import companyService from "../../services/companyService";
 import invoiceService from "../../services/invoiceService";
 
 
-const InvoiceCreate = ({ companyId, serviceId, onClose }) => {
+const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
     const [companyServices, setCompanyServices] = useState([]);
     const [selectedService, setSelectedService] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -63,6 +63,7 @@ const InvoiceCreate = ({ companyId, serviceId, onClose }) => {
            const total = quantity * price;
            await invoiceService.create(selectedService, quantity, total, recipientCompanyId);
            onClose();
+           onInvoiceCreated();
        } catch (error) {
            console.error('Error creating invoice:', error);
        }
@@ -75,19 +76,24 @@ const InvoiceCreate = ({ companyId, serviceId, onClose }) => {
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="service">Service:</label>
-                    <select
+
+                    {companyServices.length === 0 ? (
+                      <p>This company doesn't have any uploaded services yet.</p>
+                    ) : (
+                      <select
                         id="service"
                         value={selectedService}
                         onChange={handleServiceChange}
                         required
-                    >
+                      >
                         <option value="">Select a service</option>
                         {companyServices.map((service) => (
-                            <option key={service.id} value={service.id}>
-                                {service.name}
-                            </option>
+                          <option key={service.id} value={service.id}>
+                            {service.name}
+                          </option>
                         ))}
-                    </select>
+                      </select>
+                    )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="quantity">Quantity:</label>
