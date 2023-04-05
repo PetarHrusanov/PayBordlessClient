@@ -8,31 +8,30 @@ PayBordLess is an invoicing platform that allows users to create invoices and au
 
 ## Features
 
-Browse through our partner companies
-Create, view and manage invoices
-Receive notifications for invoice status changes
-Automated payment process
-Keep track of past invoices and payments
-Getting Started
+* Browse through our partner companies
+* Create, view and manage invoices
+* Receive notifications for invoice status changes
+* Automated payment process
+* Keep track of past invoices and payments
+
+## Getting Started
 
 To get started with PayBordLess, simply sign up and start browsing through our partner companies. Once you have selected a company, create and send your invoice, and let our automated payment process take care of the rest.
 
-## Usage
+###  Usage
 
-Sign up for an account
-Browse through our partner companies
-Select a company to create an invoice
-View and manage your invoices
-Receive notifications for invoice status changes
-Track past invoices and payments
+- Sign up for an account
+- Browse through our partner companies
+- Select a company to create an invoice
+- View and manage your invoices
+- Receive notifications for invoice status changes
+- Track past invoices and payments
 
 ## Technologies
 
-React.js
-Node.js
-Express.js
-MongoDB
-Support
+* React.js
+* Node.js
+* Support
 
 If you have any issues or questions, please contact our support team at support@paybordless.com.
 
@@ -46,7 +45,5 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 ### Acknowledgements
 
-React.js
-Node.js
-Express.js
-MongoDB
+* React.js
+* Node.js
