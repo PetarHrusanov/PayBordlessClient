@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {authService} from "../../services/authService";
 // ... other imports ...
 import InvoiceContext from '../../contexts/InvoiceContext';
+import '../../styles/Header.css';
 
 const Header = () => {
     const [token, setToken] = useState(getToken());

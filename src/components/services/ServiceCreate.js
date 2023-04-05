@@ -42,7 +42,7 @@ const ServiceCreate = ({ onSubmit }) => {
     };
 
     return (
-        <div className="create-company">
+        <div className="create-form">
             <h3>Create Service</h3>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="company">Company:</label>

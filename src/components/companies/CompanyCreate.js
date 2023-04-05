@@ -41,7 +41,7 @@ const CompanyCreate = ({ onSubmit }) => {
   };
 
   return (
-    <div className="create-company">
+    <div className="create-form">
       <h2>Create Company</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
