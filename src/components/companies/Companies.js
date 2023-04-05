@@ -5,6 +5,7 @@ import companyService from '../../services/companyService';
 import Modal from '../shared/Modal';
 import SuccessMessage from '../shared/SuccessMessage';
 import useFetchData from "../../hooks/useFetchData";
+import { authService } from '../../services/authService';
 
 const Companies = () => {
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
@@ -12,9 +13,15 @@ const Companies = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [companiesArray, setCompaniesArray, loadingCompanies] = useFetchData(companyService.getAll);
 
+  const token = authService.getToken();
+
   const handleActionClick = (companyId) => {
-    setSelectedCompanyId(companyId);
-    setShowCreateInvoice(true);
+    if (token) {
+        setSelectedCompanyId(companyId);
+        setShowCreateInvoice(true);
+      } else {
+        alert('You must be logged in to perform this action.');
+      }
   };
 
   const handleClose = () => {
@@ -34,7 +41,7 @@ const Companies = () => {
 
   if (loadingCompanies) {
     return <div className="loading-container">Loading...</div>;
-    }
+  }
 
   return (
     <>
@@ -74,3 +81,4 @@ const Companies = () => {
 };
 
 export default Companies;
+
