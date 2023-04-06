@@ -38,7 +38,7 @@
     text-align: center;
 }
 
-/* CompanyCreate.css */
+
 .create-form {
     text-align: center;
     padding: 2rem;
@@ -51,9 +51,6 @@
     color: #333;
 }
 
-/* Add any additional styles for the form or content here */
-
-/* CreateCompanyButton.css */
 .create-button {
     display: flex;
     justify-content: center;
@@ -75,14 +72,6 @@
     background-color: #f5a623;
 }
 
-.create-company {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
 .form-group {
     margin-bottom: 20px;
 }
@@ -100,20 +89,6 @@ input[type="number"] {
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #3e8e41;
 }
 
 input:invalid {
@@ -219,62 +194,6 @@ button[type="submit"]:hover {
 
 .logout-btn:hover {
     color: #aaa;
-}
-
-.edit-window {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    max-width: 400px;
-    width: 90%;
-}
-
-.edit-window h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.edit-window form {
-    display: flex;
-    flex-direction: column;
-}
-
-.edit-window label {
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.edit-window input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-bottom: 2px solid #f5a623;
-    font-size: 1rem;
-    color: #333;
-}
-
-.edit-window button[type="submit"] {
-    background-color: #f5a623;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.edit-window button[type="submit"]:hover {
-    background-color: #d18c00;
 }
 
 .close-btn {
@@ -426,6 +345,7 @@ button[type="submit"]:hover {
     left: 2px;
     margin-left: 4px;
 }
+
 
 
 

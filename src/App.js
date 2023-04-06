@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from "./components/shared/Header";
+import Footer from "./components/shared/Footer";
 import HomePage from "./components/HomePage";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="/services" element={<Services />} />
             </Routes>
         </Router>
+        <Footer/>
         </InvoiceContext.Provider>
     );
 };

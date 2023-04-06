@@ -22,16 +22,34 @@ export const ServiceEdit = ({ service, onSubmit, onDelete, onClose }) => {
             };
 
     return (
-        <div className="create-company">
-            <h3>Edit Service</h3>
-            <form onSubmit={handleSubmit}>
-                <label>Name:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
-                <label>Price:</label>
-                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required/>
-                <button type="submit">Save</button>
-            </form>
-           <button className="delete-btn" onClick={handleDelete}>Delete</button>
+        <div className="create-form">
+          <h3>Edit Service</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="price">Price:</label>
+              <input
+                type="number"
+                id="price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit">Save</button>
+          </form>
+          <button className="delete-btn" onClick={handleDelete}>
+            Delete
+          </button>
         </div>
     );
 };

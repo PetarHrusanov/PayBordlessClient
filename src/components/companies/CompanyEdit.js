@@ -23,15 +23,21 @@ export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
         };
 
     return (
-        <div className="create-company">
+        <div className="create-form">
             <h3>Edit Company</h3>
             <form onSubmit={handleSubmit}>
-                <label>Name:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
-                <label>VAT:</label>
-                <input type="number" value={vat} onChange={(e) => setVat(e.target.value)} required/>
-                <label>Owner:</label>
-                <input type="text" value={owner} onChange={(e) => setOwner(e.target.value)} required/>
+                <div className="form-group">
+                    <label htmlFor="name">Name:</label>
+                    <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required/>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="vat">VAT:</label>
+                    <input type="number" id="vat" value={vat} onChange={(e) => setVat(e.target.value)} required/>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="owner">Owner:</label>
+                    <input type="text" id="owner" value={owner} onChange={(e) => setOwner(e.target.value)} required/>
+                </div>
                 <button type="submit">Save</button>
             </form>
             <button className="delete-btn" onClick={handleDelete}>Delete</button>
