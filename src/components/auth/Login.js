@@ -27,7 +27,7 @@ const Login = () => {
             <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input" required/>
             <label className="form-label">Password</label>
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" required/>
-            {loginError && <p className="error">{loginError}</p>}
+            {loginError && <p className="error" style={{ color: "red" }}>{loginError}</p>}
             <button type="submit" className="create-button button">Login</button>
         </form>
     );
