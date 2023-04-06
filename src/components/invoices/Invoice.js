@@ -1,10 +1,11 @@
 import React from 'react';
 
 export const Invoice = ({ invoice, onDownloadClick }) => {
-  const { serviceName, quantity, total, issuerName, recipientName } = invoice;
+  const { id, serviceName, quantity, total, issuerName, recipientName } = invoice;
 
   return (
     <tr>
+      <td>{id}</td>
       <td>{serviceName}</td>
       <td>{quantity}</td>
       <td>{total}</td>

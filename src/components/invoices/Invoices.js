@@ -39,6 +39,7 @@ const Invoices = () => {
           <table className="table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Service Name</th>
                 <th>Quantity</th>
                 <th>Total</th>

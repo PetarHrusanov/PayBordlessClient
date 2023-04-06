@@ -6,6 +6,7 @@ import Modal from '../shared/Modal';
 import SuccessMessage from '../shared/SuccessMessage';
 import useFetchData from "../../hooks/useFetchData";
 import { authService } from '../../services/authService';
+import { Link } from 'react-router-dom';
 
 const Companies = () => {
   const [showCreateInvoice, setShowCreateInvoice] = useState(false);
@@ -14,6 +15,15 @@ const Companies = () => {
   const [companiesArray, setCompaniesArray, loadingCompanies] = useFetchData(companyService.getAll);
 
   const token = authService.getToken();
+
+  const LoginLink = () => {
+      return (
+        <div className="LoginLink">
+          <Link to="/login">Click here to log in</Link>
+        </div>
+      );
+  };
+
 
   const handleActionClick = (companyId) => {
     if (token) {
@@ -76,6 +86,7 @@ const Companies = () => {
                 <SuccessMessage message={successMessage} />
               </Modal>
        )}
+       {!token && <LoginLink />}
     </>
   );
 };

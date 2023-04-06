@@ -1,6 +1,10 @@
 .header {
     background-color: #333;
     padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
 }
 
 .nav {
@@ -24,7 +28,6 @@
     text-decoration: none;
     transition: color 0.3s;
 }
-
 
 .nav-item a:hover,
 .nav-item a.active {

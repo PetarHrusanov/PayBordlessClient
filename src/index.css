@@ -339,6 +339,34 @@ button[type="submit"]:hover {
 
 
 
+.LoginLink {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.LoginLink a {
+    text-decoration: none;
+    color: #f5a623;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border: 2px solid #f5a623;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.LoginLink a:hover {
+    background-color: #f5a623;
+    color: #fff;
+}
+
+
+.main-section {
+    margin-top: 65px;
+    margin-bottom: 65px;
+}
+
+
 
 
 
