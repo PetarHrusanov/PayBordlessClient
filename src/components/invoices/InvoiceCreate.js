@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import companyService from "../../services/companyService";
 import invoiceService from "../../services/invoiceService";
+import '../../styles/CreateCompanyPrompt.css';
 
 
 const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
@@ -125,19 +126,28 @@ const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="recipientCompany">Recipient Company:</label>
-                    <select
-                        id="recipientCompany"
-                        value={recipientCompanyId}
-                        onChange={handleRecipientCompanyChange}
-                        required
-                    >
-                        <option value="">Select a recipient company</option>
-                        {companies.map((company) => (
-                            <option key={company.id} value={company.id}>
-                                {company.name}
-                            </option>
-                        ))}
-                    </select>
+                    {companies.length === 0 ? (
+                        <p>
+                            You haven't registered any companies yet.{" "}
+                            <a href="/profile" className="create-company-link">Create a new company</a>
+                        </p>
+
+
+                    ) : (
+                        <select
+                            id="recipientCompany"
+                            value={recipientCompanyId}
+                            onChange={handleRecipientCompanyChange}
+                            required
+                        >
+                            <option value="">Select a recipient company</option>
+                            {companies.map((company) => (
+                                <option key={company.id} value={company.id}>
+                                    {company.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
                 <button type="submit">Create Invoice</button>
             </form>

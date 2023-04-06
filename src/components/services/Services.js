@@ -7,7 +7,6 @@ import SuccessMessage from '../shared/SuccessMessage';
 import useFetchData from "../../hooks/useFetchData";
 
 const Services = () => {
-//     const [servicesArray, setServicesArray] = useState([]);
     const [servicesArray, setServicesArray, loadingServices] = useFetchData(serviceService.getAll);
     const [showCreateService, setShowCreateService] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
@@ -45,6 +44,9 @@ const Services = () => {
                     <tr>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Company</th>
+                        <th>VAT</th>
+                        <th>Owner</th>
                         <th>Actions</th>
                     </tr>
                     </thead>

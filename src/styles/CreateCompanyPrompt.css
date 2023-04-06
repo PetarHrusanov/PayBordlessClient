@@ -1,0 +1,8 @@
+.create-company-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.create-company-link:hover {
+    text-decoration: underline;
+}

@@ -27,11 +27,11 @@ export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
             <h3>Edit Company</h3>
             <form onSubmit={handleSubmit}>
                 <label>Name:</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required/>
                 <label>VAT:</label>
-                <input type="text" value={vat} onChange={(e) => setVat(e.target.value)}/>
+                <input type="number" value={vat} onChange={(e) => setVat(e.target.value)} required/>
                 <label>Owner:</label>
-                <input type="text" value={owner} onChange={(e) => setOwner(e.target.value)}/>
+                <input type="text" value={owner} onChange={(e) => setOwner(e.target.value)} required/>
                 <button type="submit">Save</button>
             </form>
             <button className="delete-btn" onClick={handleDelete}>Delete</button>
