@@ -21,7 +21,6 @@ const CompanyCreate = ({ onSubmit }) => {
     console.log("handleSubmit called");
     event.preventDefault();
 
-    // Validate form data
     if (!name) {
       alert("Please enter a name for the company");
       return;
