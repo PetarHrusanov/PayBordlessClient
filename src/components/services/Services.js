@@ -20,12 +20,12 @@ const Services = () => {
     const handleClose = () => {
         setShowCreateService(false);
         serviceService
-                .getAll()
-                .then((fetchedServices) => {
-                    setServicesArray(fetchedServices);
-                 }).catch((error) => {
-                    console.error("Error fetching companies:", error);
-                 });
+            .getAll()
+            .then((fetchedServices) => {
+                setServicesArray(fetchedServices);
+                    }).catch((error) => {
+                        console.error("Error fetching companies:", error);
+                    });
     };
 
     const handleInvoiceCreated = () => {

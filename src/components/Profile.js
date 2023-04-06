@@ -49,49 +49,44 @@ export const Profile = () => {
             });
     };
 
-    const handleCompanyDelete = (companyId) => {
-            companyService.delete(companyId)
-                .then(() => {
-                    setCompaniesArray(companiesArray.filter(company => company.id !== companyId));
-                    setSuccessMessage("Company Deleted");
-                })
-                .catch(error => {
-                    const errorMessage = `Error deleting company: ${error}`;
-                    setSuccessMessage(errorMessage);
-                    console.error('Error deleting company:', error);
-                });
-        };
-
     const handleServiceEditClick = (service) => {
         setSelectedService(service);
         setShowServiceEditWindow(true);
     };
 
     const handleServiceEditSubmit = (updatedService) => {
-        if (updatedService.isDeleted) {
-            setServicesArray(servicesArray.filter(service => service.id !== updatedService.id));
-        } else {
-            setServicesArray(
-                servicesArray.map(service =>
-                    service.id === updatedService.id ? updatedService : service
-                )
-            );
-        }
-        setShowServiceEditWindow(false);
+        serviceService.edit(updatedService.id, updatedService.name, updatedService.price, updatedService.companyId)
+              .then(() => {
+                setShowServiceEditWindow(false);
+                setSelectedService(null);
+                setServicesArray(prevServices => prevServices.map(service => service.id === updatedService.id ? updatedService : service));
+              })
+              .catch(error => {
+                console.error('Error updating service:', error);
+              });
+    };
+
+    const handleCompanyDelete = (companyId) => {
+      handleDelete(companyId, companyService, setCompaniesArray, "Company Deleted");
     };
 
     const handleServiceDelete = (serviceId) => {
-                serviceService.delete(serviceId)
-                    .then(() => {
-                        setServicesArray(servicesArray.filter(service => service.id !== serviceId));
-                        setSuccessMessage("Service Deleted");
-                    })
-                    .catch(error => {
-                        const errorMessage = `Error deleting service: ${error}`;
-                        setSuccessMessage(errorMessage);
-                        console.error('Error deleting service:', error);
-                    });
-            };
+      handleDelete(serviceId, serviceService, setServicesArray, "Service Deleted");
+    };
+
+    const handleDelete = (serviceOrCompanyId, serviceOrCompanyService, setArray, message) => {
+          serviceOrCompanyService
+            .delete(serviceOrCompanyId)
+            .then(() => {
+              setArray(array => array.filter(item => item.id !== serviceOrCompanyId));
+              setSuccessMessage(message);
+            })
+            .catch(error => {
+              const errorMessage = `Error deleting service or company: ${error}`;
+              setSuccessMessage(errorMessage);
+              console.error('Error deleting service or company:', error);
+            });
+        };
 
     const handleCompanyCreateClick = () => {
         setShowCompanyCreateWindow(!showCompanyCreateWindow);
@@ -162,7 +157,6 @@ export const Profile = () => {
         return <div className="loading-container">Loading...</div>;
     }
 
-
     return (
         <div className="container">
         <h2 className="heading">Your Invoices</h2>
@@ -212,66 +206,60 @@ export const Profile = () => {
           (
            <p>There are no invoices pending for approval.</p>
            )}
-        <h2 className="heading">Your Companies</h2>
-        <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
-         {showCompanyCreateWindow && (
-             <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
-                 <CompanyCreate
-                     onSubmit={handleCompanyCreateSubmit}
-                 />
-             </Modal>
-         )}
-         {successMessage && (
-           <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
-             <SuccessMessage message={successMessage} />
-           </Modal>
-         )}
-        {companiesArray.length > 0 ? (
-            <div className="table-wrapper">
-                <table className="table">
+              <h2 className="heading">Your Companies</h2>
+              <button className="create-btn" onClick={handleCompanyCreateClick}>Create Company</button>
+              {showCompanyCreateWindow && (
+                <Modal show={showCompanyCreateWindow} onClose={handleCompanyCreateClick}>
+                  <CompanyCreate onSubmit={handleCompanyCreateSubmit} />
+                </Modal>
+              )}
+              {successMessage && (
+                <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+                  <SuccessMessage message={successMessage} />
+                </Modal>
+              )}
+              {companiesArray.length > 0 ? (
+                <div className="table-wrapper">
+                  <table className="table">
                     <thead>
-                    <tr>
+                      <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>VAT</th>
                         <th>Owner</th>
                         <th>Actions</th>
-                    </tr>
+                      </tr>
                     </thead>
                     <tbody>
-                    {companiesArray.map((item) => {
-                    console.log(item);
-                        const { id, name, vat, owner, userId } = item;
-                        return (
-                            <tr key={id}>
-                                <td>{id}</td>
-                                <td>{name}</td>
-                                <td>{vat}</td>
-                                <td>{owner}</td>
-                                <td>
-                                    <button className="create-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
+                      {companiesArray.map(({ id, name, vat, owner, userId }) => (
+                        <tr key={id}>
+                          <td>{id}</td>
+                          <td>{name}</td>
+                          <td>{vat}</td>
+                          <td>{owner}</td>
+                          <td>
+                            <button className="create-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
-                </table>
-            </div>
-             ) : (
-                    <p>No companies found. Please create a company.</p>
-                  )}
-                  {successMessage && (
-                             <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
-                               <SuccessMessage message={successMessage} />
-                             </Modal>
-                           )}
-            {showEditWindow && (
-                          <Modal show={showEditWindow} onClose={() => setShowEditWindow(false)}>
-                            <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onDelete={() => handleCompanyDelete(selectedCompany.id)} onClose={() => setShowEditWindow(false)} />
-                          </Modal>
-                        )}
+                  </table>
+                </div>
+              ) : (
+                <p>No companies found. Please create a company.</p>
+              )}
+              {successMessage && (
+                <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
+                  <SuccessMessage message={successMessage} />
+                </Modal>
+              )}
+              {showEditWindow && (
+                <Modal show={showEditWindow} onClose={() => setShowEditWindow(false)}>
+                  <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onDelete={() => handleCompanyDelete(selectedCompany.id)} onClose={() => setShowEditWindow(false)} />
+                </Modal>
+              )}
 
-            <h2 className="heading">Your Services</h2>
+           <h2 className="heading">Your Services</h2>
            <button className="create-btn" onClick={handleServiceCreateClick}>Create Service</button>
            {showServiceCreateWindow && (
              <Modal show={showServiceCreateWindow} onClose={handleServiceCreateClick}>

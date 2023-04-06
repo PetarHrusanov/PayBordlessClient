@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import serviceService from "../../services/serviceService";
 
 export const ServiceEdit = ({ service, onSubmit, onDelete, onClose }) => {
     const [name, setName] = useState(service.name);
@@ -8,18 +7,13 @@ export const ServiceEdit = ({ service, onSubmit, onDelete, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await serviceService.edit(service.id, name, price, companyId);
-            onSubmit({ ...service, name, price, companyId });
-        } catch (error) {
-            alert('Error updating service:', error);
-        }
+        onSubmit({ ...service, name, price, companyId });
     };
 
     const handleDelete = async () => {
-            onDelete();
-            onClose();
-            };
+        onDelete();
+        onClose();
+    };
 
     return (
         <div className="create-form">

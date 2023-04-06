@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import companyService from "../../services/companyService";
 
 export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
     const [name, setName] = useState(company.name);
@@ -9,12 +8,7 @@ export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await companyService.edit(company.id, name, vat, owner, userId);
-            onSubmit({...company, name, vat, owner, userId});
-        } catch (error) {
-            alert('Error updating company:', error);
-        }
+        onSubmit({...company, name, vat, owner, userId});
     };
 
     const handleDelete = async () => {
