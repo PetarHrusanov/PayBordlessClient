@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
     return (
-        <div className="intro-container">
+        <div className="container">
             <h1 className="intro-heading">PayBordLess</h1>
             <p className="intro-subheading">
                 A seamless platform for generating and managing invoices.
