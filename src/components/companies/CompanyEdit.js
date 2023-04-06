@@ -13,7 +13,7 @@ export const CompanyEdit = ({company, onSubmit, onDelete, onClose}) => {
             await companyService.edit(company.id, name, vat, owner, userId);
             onSubmit({...company, name, vat, owner, userId});
         } catch (error) {
-            console.error('Error updating company:', error);
+            alert('Error updating company:', error);
         }
     };
 

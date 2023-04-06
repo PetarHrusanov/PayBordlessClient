@@ -12,7 +12,7 @@ export const ServiceEdit = ({ service, onSubmit, onDelete, onClose }) => {
             await serviceService.edit(service.id, name, price, companyId);
             onSubmit({ ...service, name, price, companyId });
         } catch (error) {
-            console.error('Error updating service:', error);
+            alert('Error updating service:', error);
         }
     };
 

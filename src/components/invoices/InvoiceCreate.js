@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import companyService from "../../services/companyService";
 import invoiceService from "../../services/invoiceService";
-import '../../styles/CreateCompanyPrompt.css';
+import '../../styles/CreatePrompt.css';
 
 
 const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
@@ -18,8 +18,6 @@ const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
                 .getServicesByCompanyId(companyId)
                 .then((services) => {
                     setCompanyServices(services);
-
-                    // Preselect service if serviceId is passed
                     if (serviceId) {
                         const selected = services.find(service => service.id === serviceId);
                         if (selected) {
@@ -29,7 +27,7 @@ const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
                     }
                 })
                 .catch((error) => {
-                    console.error('Error fetching services:', error);
+                    alert('Error fetching services:', error);
                 });
 
         companyService
@@ -38,7 +36,7 @@ const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
                 setCompanies(companies);
             })
             .catch((error) => {
-                console.error('Error fetching companies:', error);
+                alert('Error fetching companies:', error);
             });
     }, [companyId, serviceId]);
 
@@ -129,7 +127,7 @@ const InvoiceCreate = ({ companyId, serviceId, onClose, onInvoiceCreated }) => {
                     {companies.length === 0 ? (
                         <p>
                             You haven't registered any companies yet.{" "}
-                            <a href="/profile" className="create-company-link">Create a new company</a>
+                            <a href="/profile" className="create-link">Create a new company</a>
                         </p>
 
 
