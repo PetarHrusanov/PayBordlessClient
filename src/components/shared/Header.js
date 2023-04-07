@@ -23,24 +23,24 @@ const Header = () => {
             <nav className="nav">
                 <ul className="nav-list">
                     <li className="nav-item">
-                        <NavLink to="/" activeClassName="active">
+                        <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
                             Home
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink to="/companies" activeClassName="active">
+                        <NavLink to="/companies" className={({ isActive }) => (isActive ? "active" : "")}>
                             Companies
                         </NavLink>
                     </li>
                     {!token && (
                         <React.Fragment>
                             <li className="nav-item">
-                                <NavLink to="/register" activeClassName="active">
+                                <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
                                     Register
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/login" activeClassName="active">
+                                <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
                                     Login
                                 </NavLink>
                             </li>
@@ -49,17 +49,17 @@ const Header = () => {
                     {token && (
                         <React.Fragment>
                             <li className="nav-item">
-                                <NavLink to="/invoices" activeClassName="active">
+                                <NavLink to="/invoices" className={({ isActive }) => (isActive ? "active" : "")}>
                                     Invoices
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/services" activeClassName="active">
+                                <NavLink to="/services" className={({ isActive }) => (isActive ? "active" : "")}>
                                     Services
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/profile" activeClassName="active">
+                                <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>
                                   Profile
                                   {pendingInvoices > 0 && (
                                     <span className="pending-invoices-count" title="Pending invoices">
