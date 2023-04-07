@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import companyService from "../services/companyService";
 import {CompanyEdit} from "./companies/CompanyEdit";
 import serviceService from "../services/serviceService";
@@ -10,6 +10,7 @@ import InvoiceContext from '../contexts/InvoiceContext';
 import Modal from './shared/Modal';
 import useFetchData from "../hooks/useFetchData";
 import SuccessMessage from './shared/SuccessMessage';
+import Table from './shared/Table';
 
 
 export const Profile = () => {
@@ -25,133 +26,80 @@ export const Profile = () => {
     const [showCompanyCreateWindow, setShowCompanyCreateWindow] = useState(false);
     const [showServiceCreateWindow, setShowServiceCreateWindow] = useState(false);
     const { setPendingInvoices } = useContext(InvoiceContext);
-
     const [successMessage, setSuccessMessage] = useState(null);
 
-    useEffect(() => {
-      setPendingInvoices(invoicesArray.length);
-    }, [invoicesArray, setPendingInvoices]);
+    useEffect(() => setPendingInvoices(invoicesArray.length), [invoicesArray, setPendingInvoices]);
 
-    const handleEditClick = (company) => {
-        setSelectedCompany(company);
-        setShowEditWindow(true);
+    const handleEditClick = (item, setter, toggler) => {
+      setter(item);
+      toggler(true);
     };
 
-    const handleEditSubmit = (updatedCompany) => {
-        companyService.edit(updatedCompany.id, updatedCompany.name, updatedCompany.vat, updatedCompany.owner, updatedCompany.userId)
-            .then(() => {
-                setShowEditWindow(false);
-                setSelectedCompany(null);
-                setCompaniesArray((prevCompanies) => prevCompanies.map(company => company.id === updatedCompany.id ? updatedCompany : company));
-            })
-            .catch(error => {
-                console.error('Error updating company:', error);
-            });
+    const handleEditSubmit = async (item, service, setter, arraySetter) => {
+      try {
+        await service.edit(...Object.values(item));
+        setter(false);
+        arraySetter((prev) => prev.map((i) => (i.id === item.id ? item : i)));
+      } catch (error) {
+        console.error(`Error updating ${service}:`, error);
+      }
     };
 
-    const handleServiceEditClick = (service) => {
-        setSelectedService(service);
-        setShowServiceEditWindow(true);
+    const handleDelete = async (id, service, arraySetter, message) => {
+      try {
+        await service.delete(id);
+        arraySetter((prev) => prev.filter((i) => i.id !== id));
+        setSuccessMessage(message);
+      } catch (error) {
+        console.error(`Error deleting ${service}:`, error);
+      }
     };
 
-    const handleServiceEditSubmit = (updatedService) => {
-        serviceService.edit(updatedService.id, updatedService.name, updatedService.price, updatedService.companyId)
-              .then(() => {
-                setShowServiceEditWindow(false);
-                setSelectedService(null);
-                setServicesArray(prevServices => prevServices.map(service => service.id === updatedService.id ? updatedService : service));
-              })
-              .catch(error => {
-                console.error('Error updating service:', error);
-              });
+    const handleCreateSubmit = useCallback(async (newItem, service, arraySetter, onClose) => {
+          try {
+            await service.create(...Object.values(newItem));
+            setSuccessMessage(`${service} created successfully!`);
+            arraySetter(await service.getByUserId());
+            onClose(); // Close the modal after successful creation
+          } catch (error) {
+            console.error(`Error creating ${service}:`, error);
+          }
+        }, []);
+
+    const handleInvoiceApproval = async (invoiceId, isApproved) => {
+      try {
+        await invoiceService.setApprovalStatus(invoiceId, isApproved);
+        setInvoicesArray(await invoiceService.getUnapprovedByUserId());
+        setPendingInvoices((prev) => prev - 1);
+      } catch (error) {
+        console.error("Error updating invoice approval status:", error);
+      }
     };
 
-    const handleCompanyDelete = (companyId) => {
-      handleDelete(companyId, companyService, setCompaniesArray, "Company Deleted");
-    };
+    const handleCompanyEditClick = (company) => handleEditClick(company, setSelectedCompany, setShowEditWindow);
+    const handleCompanyEditSubmit = (updatedCompany) => handleEditSubmit(updatedCompany, companyService, setShowEditWindow, setCompaniesArray);
 
-    const handleServiceDelete = (serviceId) => {
-      handleDelete(serviceId, serviceService, setServicesArray, "Service Deleted");
-    };
+    const handleServiceEditClick = (service) => handleEditClick(service, setSelectedService, setShowServiceEditWindow);
+    const handleServiceEditSubmit = (updatedService) => handleEditSubmit(updatedService, serviceService, setShowServiceEditWindow, setServicesArray);
 
-    const handleDelete = (serviceOrCompanyId, serviceOrCompanyService, setArray, message) => {
-          serviceOrCompanyService
-            .delete(serviceOrCompanyId)
-            .then(() => {
-              setArray(array => array.filter(item => item.id !== serviceOrCompanyId));
-              setSuccessMessage(message);
-            })
-            .catch(error => {
-              const errorMessage = `Error deleting service or company: ${error}`;
-              setSuccessMessage(errorMessage);
-              console.error('Error deleting service or company:', error);
-            });
-        };
+    const handleCompanyDelete = (companyId) => handleDelete(companyId, companyService, setCompaniesArray, "Company Deleted");
+    const handleServiceDelete = (serviceId) => handleDelete(serviceId, serviceService, setServicesArray, "Service Deleted");
 
-    const handleCompanyCreateClick = () => {
-        setShowCompanyCreateWindow(!showCompanyCreateWindow);
-    };
+    const handleCompanyCreateClick = useCallback(() => {
+        setShowCompanyCreateWindow((prevShowCompanyCreateWindow) => !prevShowCompanyCreateWindow);
+    }, []);
 
-    const handleCompanyCreateSubmit = (newCompany) => {
-      companyService
-        .create(newCompany.name, newCompany.vat, newCompany.owner)
-        .then(() => {
-          setSuccessMessage("Company created successfully!");
-          handleCompanyCreateClick();
-          companyService
-            .getByUserId()
-            .then((fetchedCompanies) => {
-              setCompaniesArray(fetchedCompanies);
-            })
-            .catch((error) => {
-              console.error("Error fetching companies:", error);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    };
+    const handleCompanyCreateSubmit = useCallback((newCompany) => {
+        handleCreateSubmit(newCompany, companyService, setCompaniesArray, handleCompanyCreateClick);
+    }, [handleCreateSubmit, handleCompanyCreateClick, setCompaniesArray]);
 
-    const handleServiceCreateClick = () => {
-        setShowServiceCreateWindow(!showServiceCreateWindow);
-    };
+    const handleServiceCreateClick = useCallback(() => {
+        setShowServiceCreateWindow((prevShowServiceCreateWindow) => !prevShowServiceCreateWindow);
+    }, []);
 
-    const handleServiceCreateSubmit = (newService) => {
-      serviceService
-        .create(newService.name, newService.price, newService.companyId)
-        .then(() => {
-          setSuccessMessage("Service created successfully!");
-          handleServiceCreateClick();
-          serviceService
-            .getByUserId()
-            .then((fetchedServices) => {
-              setServicesArray(fetchedServices);
-            })
-            .catch((error) => {
-              console.error("Error fetching companies:", error);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    };
-
-    const handleInvoiceApproval = (invoiceId, isApproved) => {
-        invoiceService
-            .setApprovalStatus(invoiceId, isApproved)
-            .then(()=>{ invoiceService
-            .getUnapprovedByUserId()
-            .then((fetchedInvoices) => {
-                setInvoicesArray(fetchedInvoices);
-                setPendingInvoices((prevPendingInvoices) =>  prevPendingInvoices - 1);
-                }).catch((error) => {
-                console.error("Error fetching companies:", error);
-             });
-            })
-            .catch((error) => {
-                console.error("Error updating invoice approval status:", error);
-            });
-    };
+    const handleServiceCreateSubmit = useCallback((newService) => {
+        handleCreateSubmit(newService, serviceService, setServicesArray, handleServiceCreateClick);
+    }, [handleCreateSubmit, handleServiceCreateClick, setServicesArray]);
 
     if (loadingCompanies || loadingServices || loadingInvoices) {
         return <div className="loading-container">Loading...</div>;
@@ -218,36 +166,30 @@ export const Profile = () => {
                   <SuccessMessage message={successMessage} />
                 </Modal>
               )}
-              {companiesArray.length > 0 ? (
-                <div className="table-wrapper">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>VAT</th>
-                        <th>Owner</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {companiesArray.map(({ id, name, vat, owner, userId }) => (
-                        <tr key={id}>
-                          <td>{id}</td>
-                          <td>{name}</td>
-                          <td>{vat}</td>
-                          <td>{owner}</td>
-                          <td>
-                            <button className="create-btn" onClick={() => handleEditClick({ id, name, vat, owner, userId })}>Edit</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <p>No companies found. Please create a company.</p>
-              )}
+                {companiesArray.length > 0 ? (
+                      <Table
+                        columns={["ID", "Name", "VAT", "Owner", "Actions"]}
+                        data={companiesArray}
+                        actions={({ id, name, vat, owner, userId }) => (
+                          <tr key={id}>
+                            <td>{id}</td>
+                            <td>{name}</td>
+                            <td>{vat}</td>
+                            <td>{owner}</td>
+                            <td>
+                              <button
+                                className="create-btn"
+                                onClick={() => handleCompanyEditClick({ id, name, vat, owner, userId })}
+                              >
+                                Edit
+                              </button>
+                            </td>
+                          </tr>
+                        )}
+                      />
+                    ) : (
+                      <p>No companies found. Please create a company.</p>
+                    )}
               {successMessage && (
                 <Modal show={!!successMessage} onClose={() => setSuccessMessage(null)}>
                   <SuccessMessage message={successMessage} />
@@ -255,7 +197,7 @@ export const Profile = () => {
               )}
               {showEditWindow && (
                 <Modal show={showEditWindow} onClose={() => setShowEditWindow(false)}>
-                  <CompanyEdit company={selectedCompany} onSubmit={handleEditSubmit} onDelete={() => handleCompanyDelete(selectedCompany.id)} onClose={() => setShowEditWindow(false)} />
+                  <CompanyEdit company={selectedCompany} onSubmit={handleCompanyEditSubmit} onDelete={() => handleCompanyDelete(selectedCompany.id)} onClose={() => setShowEditWindow(false)} />
                 </Modal>
               )}
 
@@ -272,35 +214,26 @@ export const Profile = () => {
              </Modal>
              )}
             {servicesArray.length > 0 ? (
-            <div className="table-wrapper">
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Company ID</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {servicesArray.map((item) => {
-                            const { id, name, price, companyName, companyId } = item;
-                                return (
-                                    <tr key={id}>
-                                        <td>{id}</td>
-                                        <td>{name}</td>
-                                        <td>{price}</td>
-                                        <td>{companyName}</td>
-                                        <td>
-                                            <button className="create-btn" onClick={() => handleServiceEditClick({ id, name, price, companyId })}>Edit</button>
-                                        </td>
-                                    </tr>
-                                        );
-                                    })}
-                    </tbody>
-                </table>
-            </div>
+            <Table
+             columns={["ID", "Name", "Price", "Company", "Actions"]}
+             data={servicesArray}
+             actions={({ id, name, price, companyName, companyId }) => (
+                <tr key={id}>
+                <td>{id}</td>
+                <td>{name}</td>
+                <td>{price}</td>
+                <td>{companyName}</td>
+                <td>
+                    <button
+                        className="create-btn"
+                        onClick={() => handleServiceEditClick({ id, name, price, companyId })}
+                    >
+                        Edit
+                    </button>
+                </td>
+                </tr>
+                )}
+             />
             ) : (
             <p>No services found. Please create a service.</p>
             )}
