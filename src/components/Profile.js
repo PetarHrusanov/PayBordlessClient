@@ -35,11 +35,13 @@ export const Profile = () => {
       toggler(true);
     };
 
-    const handleEditSubmit = async (item, service, setter, arraySetter) => {
+    const handleEditSubmit = async (item, service, setter, arraySetter, successMessage) => {
       try {
         await service.edit(...Object.values(item));
         setter(false);
         arraySetter((prev) => prev.map((i) => (i.id === item.id ? item : i)));
+        setSuccessMessage(successMessage);
+
       } catch (error) {
         console.error(`Error updating ${service}:`, error);
       }
@@ -60,7 +62,7 @@ export const Profile = () => {
             await service.create(...Object.values(newItem));
             setSuccessMessage(`${service} created successfully!`);
             arraySetter(await service.getByUserId());
-            onClose(); // Close the modal after successful creation
+            onClose();
           } catch (error) {
             console.error(`Error creating ${service}:`, error);
           }
@@ -77,10 +79,10 @@ export const Profile = () => {
     };
 
     const handleCompanyEditClick = (company) => handleEditClick(company, setSelectedCompany, setShowEditWindow);
-    const handleCompanyEditSubmit = (updatedCompany) => handleEditSubmit(updatedCompany, companyService, setShowEditWindow, setCompaniesArray);
+    const handleCompanyEditSubmit = (updatedCompany) => handleEditSubmit(updatedCompany, companyService, setShowEditWindow, setCompaniesArray, "Company updated successfully!");
 
     const handleServiceEditClick = (service) => handleEditClick(service, setSelectedService, setShowServiceEditWindow);
-    const handleServiceEditSubmit = (updatedService) => handleEditSubmit(updatedService, serviceService, setShowServiceEditWindow, setServicesArray);
+    const handleServiceEditSubmit = (updatedService) => handleEditSubmit(updatedService, serviceService, setShowServiceEditWindow, setServicesArray, "Service updated successfully!");
 
     const handleCompanyDelete = (companyId) => handleDelete(companyId, companyService, setCompaniesArray, "Company Deleted");
     const handleServiceDelete = (serviceId) => handleDelete(serviceId, serviceService, setServicesArray, "Service Deleted");
