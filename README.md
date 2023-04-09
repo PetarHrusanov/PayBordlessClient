@@ -1,6 +1,7 @@
 # PayBordLess
 
 A seamless platform for generating and managing invoices.
+Published to Heroku: https://paybordless.herokuapp.com/register
 
 ## Introduction
 
